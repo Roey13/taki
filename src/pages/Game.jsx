@@ -11,6 +11,9 @@ export function Game() {
     const [numberOfPlayers, setnumberOfPlayer] = useState(2)
     const [playersDecks, setPlayersDecks] = useState([])
     const [currCard, setCurrCard] = useState()
+    const [playerTurn, setPlayerTurn] = useState(1)
+
+    const currTurnStyle = {backgroundColor: '#00d0ff'}
 
     useEffect(() => {
         dispatch(getCardDeck())
@@ -24,14 +27,19 @@ export function Game() {
         dispatch(getCardDeck())
         const playerDeck = deck.splice(0, 8 * numberOfPlayers)
         const allDecks = []
+        const players = []
         for (let i = 0; i < playerDeck.length; i += 8) {
             const chunk = playerDeck.slice(i, i + 8);
             allDecks.push(chunk);
         }
-        setPlayersDecks(allDecks)
-        setCurrCard(deck.splice(0,1))
-    }
 
+        for (let i = 0; i < allDecks.length; i++){
+            players.push({playerNo: i+1, deck: allDecks[i]})
+        }
+
+        setPlayersDecks(players)
+        setCurrCard(deck.splice(0, 1))
+    }
     const updateNumberOfPlayers = (ev) => {
         setnumberOfPlayer(ev.target.value);
     }
@@ -41,18 +49,22 @@ export function Game() {
         <div className="game-page-container">
             <button onClick={startGame}>Start Game</button>
             <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
-            {playersDecks.map((deck, i) => {
-                return <div style={{border: '1px solid black'}}>
-                <div>Player No. {i+1}</div>
-                {deck.map((card)=>{
-                    return (
-                    <div>
-                        <div>{card.cardName}</div>
+            <div className="players-container">
+                {playersDecks.map((deck) => {
+                    let style = {}
+                    if (deck.playerNo === playerTurn) style = currTurnStyle
+                    return <div className="player-container">
+                        <div style={style}>Player No. {deck.playerNo}</div>
+                        {deck.deck.map((card) => {
+                            return (
+                                <div>
+                                    <div>{card.cardName}</div>
+                                </div>
+                            )
+                        })}
                     </div>
-                    )
                 })}
-                </div>
-            })}
+            </div>
             {currCard ? <div>{currCard[0].cardName}</div> : <div></div>}
         </div>
     )
