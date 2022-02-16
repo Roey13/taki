@@ -1,0 +1,113 @@
+.landings-page-container {
+  padding-top: rem(100px);
+  background-color: #E4F6F8;
+
+  .filtering-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: rem(15px);
+    position: fixed;
+    height: rem(70px);
+    justify-content: center;
+    width: 100vw;
+    background-color: #8877AD;
+  }
+
+  .landings-container {
+    padding-top: rem(70px);
+    padding-bottom: rem(80px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include for-tablet-layout {
+      display: grid;
+      grid-template-columns: repeat(2, 220px);
+      justify-content: center;
+    }
+
+    @include for-desktop-layout {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      justify-content: center;
+    }
+
+    @include for-wide-layout {
+      display: grid;
+      grid-template-columns: repeat(3, 300px);
+    }
+    
+  }
+
+  .pagination-container{
+    display: flex;
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
+    background-color: #BBC0DD;
+    padding-top: rem(5px);
+    justify-content: center;
+
+    @include for-tablet-layout {
+      padding-top: rem(10px);
+    }
+
+    @include for-wide-layout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: rem(80px);
+      position: fixed;
+      bottom: 0;
+      background-color: #BBC0DD;
+    }
+
+    .paginationBttns {
+      height: 40px;
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      padding: unset;
+    }
+  
+    .paginationBttns a {
+      margin: 8px;
+      border-radius: 5px;
+      border: 1px solid #000000;
+      color: #000000;
+      cursor: pointer;
+
+      @include for-tablet-layout {
+              padding: 3px;
+      }
+
+      @include for-desktop-layout {
+        padding: 10px;
+}
+
+      @include for-wide-layout {
+        padding: 10px;
+      }
+
+    }
+  
+    .paginationBttns a:hover {
+      color: white;
+      background-color: #0e11b1;
+    }
+  
+    .paginationActive a {
+      color: white;
+      background-color: #0e11b1;
+    }
+  
+    .paginationDisabled a {
+      display: none;
+    }
+
+  }
+
+
+}

@@ -1,0 +1,19 @@
+.card-container{
+    display: flex;
+    flex-direction: column;
+    margin: rem(50px);
+    align-items: center;
+    max-width: rem(200px);
+    text-align: center;
+
+    img{
+        @include for-tablet-layout {
+            max-width: rem(150px);
+        }
+        
+        @include for-wide-layout {
+            max-width: rem(200px);
+        }
+    }
+
+}

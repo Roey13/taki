@@ -1,0 +1,15 @@
+// Setup
+@import "setup/variables";
+@import "setup/functions";
+@import "setup/mixins";
+
+// Basics
+@import "basics/base";
+
+//pages
+@import "pages/landings";
+@import "pages/landingDetails";
+
+//cmps
+@import "cmps/card";
+@import "cmps/header"
