@@ -16,6 +16,8 @@ export function cardsReducer(state = initialState, action = {}) {
       return { ...state, playersDecks: action.players }
     case 'GET_PLAYING_DECK':
       return { ...state, playingDeck: action.playingDeck }
+    case 'SET_PLAYERS_TURN':
+      return { ...state, playersTurn: action.playersTurn }
     default:
       return state
   }

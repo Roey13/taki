@@ -32,3 +32,11 @@ export function getPlayingDeck(playingDeck){
     } catch (err) {}
   }
 }
+
+export function setPlayersTurn(playersTurn){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'SET_PLAYERS_TURN', playersTurn })
+    } catch (err) {}
+  }
+}

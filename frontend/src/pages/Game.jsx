@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getCardDeck, getShuffledDeck,  getPlayersDecks, getPlayingDeck } from '../store/actions/cardsActions.js'
+import { PlayersCards } from '../cmps/PlayersCards'
 
 export function Game() {
 
@@ -26,12 +27,13 @@ export function Game() {
             const shuffled = cardDeck.sort((a, b) => 0.5 - Math.random())
             dispatch(getShuffledDeck(shuffled))
         }
-    }, [cardDeck])
+    }, [cardDeck, dispatch])
 
     const startGame = () => {
         const playerDeck = shuffledDeck.splice(0, 8 * numberOfPlayers)
         const allDecks = []
         const players = []
+
         for (let i = 0; i < playerDeck.length; i += 8) {
             const chunk = playerDeck.slice(i, i + 8);
             allDecks.push(chunk);
@@ -59,16 +61,14 @@ export function Game() {
             <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
             </div>}
             <div className="players-container">
-                {playersDecks.map((deck) => {
+                {playersDecks.map((deck, i) => {
                     let style = {}
                     if (deck.playerNo === playersTurn) style = currTurnStyle
-                    return <div className="player-container">
+                    return <div className="player-container" key={i}>
                         <div style={style}>Player No. {deck.playerNo}</div>
                         {deck.deck.map((card) => {
                             return (
-                                <div>
-                                    <div>{card.cardName}</div>
-                                </div>
+                                <PlayersCards card={card} isTurn={deck.playerNo === playersTurn} key={card.cardName}/>
                             )
                         })}
                     </div>
