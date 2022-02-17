@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck } from '../store/actions/cardsActions.js'
-import { Loading } from '../helpers/Loading.js'
+import { getCardDeck, getShuffledDeck,  getPlayersDecks, getPlayingDeck } from '../store/actions/cardsActions.js'
 
 export function Game() {
 
     const dispatch = useDispatch()
-    const { cardDeck } = useSelector(state => state.cardsModule)
-    const [deck, setDeck] = useState([])
-    const [numberOfPlayers, setnumberOfPlayer] = useState(2)
-    const [playersDecks, setPlayersDecks] = useState([])
-    const [currCard, setCurrCard] = useState()
-    const [playerTurn, setPlayerTurn] = useState(1)
+    const {
+        cardDeck,
+        shuffledDeck,
+        playersDecks,
+        playingDeck,
+        playersTurn
+    } = useSelector(state => state.cardsModule)
+
+    const [numberOfPlayers, setNumberOfPlayers] = useState(2)
 
     const currTurnStyle = {backgroundColor: '#00d0ff'}
 
@@ -20,12 +22,14 @@ export function Game() {
     }, [dispatch])
 
     useEffect(() => {
-        if (cardDeck) setDeck(cardDeck.sort((a, b) => 0.5 - Math.random()))
+        if (cardDeck){
+            const shuffled = cardDeck.sort((a, b) => 0.5 - Math.random())
+            dispatch(getShuffledDeck(shuffled))
+        }
     }, [cardDeck])
 
     const startGame = () => {
-        dispatch(getCardDeck())
-        const playerDeck = deck.splice(0, 8 * numberOfPlayers)
+        const playerDeck = shuffledDeck.splice(0, 8 * numberOfPlayers)
         const allDecks = []
         const players = []
         for (let i = 0; i < playerDeck.length; i += 8) {
@@ -37,22 +41,27 @@ export function Game() {
             players.push({playerNo: i+1, deck: allDecks[i]})
         }
 
-        setPlayersDecks(players)
-        setCurrCard(deck.splice(0, 1))
-    }
-    const updateNumberOfPlayers = (ev) => {
-        setnumberOfPlayer(ev.target.value);
+
+        dispatch(getPlayersDecks(players))
+        const newPlayingDeck = shuffledDeck.splice(0, 1)
+        dispatch(getPlayingDeck(newPlayingDeck))
     }
 
-    if (!deck) return <Loading />
+    const updateNumberOfPlayers = (ev) => {
+        setNumberOfPlayers(ev.target.value);
+    }
+    
     return (
         <div className="game-page-container">
+            {!playingDeck &&
+            <div className="game-options-container">
             <button onClick={startGame}>Start Game</button>
             <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
+            </div>}
             <div className="players-container">
                 {playersDecks.map((deck) => {
                     let style = {}
-                    if (deck.playerNo === playerTurn) style = currTurnStyle
+                    if (deck.playerNo === playersTurn) style = currTurnStyle
                     return <div className="player-container">
                         <div style={style}>Player No. {deck.playerNo}</div>
                         {deck.deck.map((card) => {
@@ -65,7 +74,7 @@ export function Game() {
                     </div>
                 })}
             </div>
-            {currCard ? <div>{currCard[0].cardName}</div> : <div></div>}
+            {playingDeck && <div>{playingDeck[0].cardName}</div>}
         </div>
     )
 }

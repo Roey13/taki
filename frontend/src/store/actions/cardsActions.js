@@ -1,4 +1,3 @@
-import { landingsService } from '../../services/landingsService'
 import { cardDeckService } from '../../services/cardDeckService'
 
 export function getCardDeck(){
@@ -10,29 +9,26 @@ export function getCardDeck(){
   }
 }
 
-export function getLandingById(id){
+export function getShuffledDeck(shuffled){
   return async dispatch => {
     try {
-      const currLanding = await landingsService.getLandingById(id)
-      dispatch({ type: 'GET_LANDING_BY_ID', currLanding })
+      dispatch({ type: 'GET_SHUFFLED_DECK', shuffled })
     } catch (err) {}
   }
 }
 
-export function getRocketById(id){
+export function getPlayersDecks(players){
   return async dispatch => {
     try {
-      const currRocket = await landingsService.getRocketById(id)
-      dispatch({ type: 'GET_ROCKET_BY_ID', currRocket })
+      dispatch({ type: 'GET_PLAYERS_DECKS', players })
     } catch (err) {}
   }
 }
 
-export function getLaunchpadById(id){
+export function getPlayingDeck(playingDeck){
   return async dispatch => {
     try {
-      const currLaunchpad = await landingsService.getLaunchpadById(id)
-      dispatch({ type: 'GET_LAUNCHPAD_BY_ID', currLaunchpad })
+      dispatch({ type: 'GET_PLAYING_DECK', playingDeck })
     } catch (err) {}
   }
 }

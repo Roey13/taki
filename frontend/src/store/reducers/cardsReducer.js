@@ -1,20 +1,21 @@
 const initialState = {
   cardDeck: null,
-  currLanding: null,
-  currRocket: null,
-  currLaunchpad: null
+  shuffledDeck: null,
+  playersDecks: [],
+  playingDeck: null,
+  playersTurn: 1
 }
 
 export function cardsReducer(state = initialState, action = {}) {
   switch (action.type) {
     case 'GET_CARD_DECK':
-      return { ...state, cardDeck: action.cardDeck}
-    case 'GET_LANDING_BY_ID':
-      return { ...state, currLanding: action.currLanding }
-    case 'GET_ROCKET_BY_ID':
-      return { ...state, currRocket: action.currRocket }
-    case 'GET_LAUNCHPAD_BY_ID':
-      return { ...state, currLaunchpad: action.currLaunchpad }
+      return { ...state, cardDeck: action.cardDeck }
+    case 'GET_SHUFFLED_DECK':
+      return { ...state, shuffledDeck: action.shuffled }
+    case 'GET_PLAYERS_DECKS':
+      return { ...state, playersDecks: action.players }
+    case 'GET_PLAYING_DECK':
+      return { ...state, playingDeck: action.playingDeck }
     default:
       return state
   }
