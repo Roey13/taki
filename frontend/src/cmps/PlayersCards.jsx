@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getCardDeck, getShuffledDeck,  getPlayersDecks, getPlayingDeck, setPlayersTurn } from '../store/actions/cardsActions.js'
+import { checkIfLegal } from '../helpers/checkIfLegal.js';
 
 export function PlayersCards({card, isTurn}) {
 
@@ -10,6 +11,7 @@ export function PlayersCards({card, isTurn}) {
 
     const playTurn = (card) =>{
         const TempPlayingDeck = playingDeck
+        if (checkIfLegal(card, TempPlayingDeck)){
         TempPlayingDeck.unshift(card)
         dispatch(getPlayingDeck(TempPlayingDeck))
 
@@ -29,7 +31,7 @@ export function PlayersCards({card, isTurn}) {
         } else {
             dispatch(setPlayersTurn(playersTurn + 1))
         }
-
+        }
     }
 
     if (isTurn) {
