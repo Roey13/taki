@@ -3,7 +3,8 @@ const initialState = {
   shuffledDeck: null,
   playersDecks: [],
   playingDeck: null,
-  playersTurn: 1
+  playersTurn: 1,
+  numberOfPlayers: 2
 }
 
 export function cardsReducer(state = initialState, action = {}) {
@@ -18,6 +19,8 @@ export function cardsReducer(state = initialState, action = {}) {
       return { ...state, playingDeck: action.playingDeck }
     case 'SET_PLAYERS_TURN':
       return { ...state, playersTurn: action.playersTurn }
+    case 'SET_NUMBER_OF_PLAYERS':
+      return { ...state, numberOfPlayers: action.num }
     default:
       return state
   }

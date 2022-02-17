@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck,  getPlayersDecks, getPlayingDeck } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck,  getPlayersDecks, getPlayingDeck, setNumberOfPlayers } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 
 export function Game() {
@@ -11,10 +11,9 @@ export function Game() {
         shuffledDeck,
         playersDecks,
         playingDeck,
-        playersTurn
+        playersTurn,
+        numberOfPlayers
     } = useSelector(state => state.cardsModule)
-
-    const [numberOfPlayers, setNumberOfPlayers] = useState(2)
 
     const currTurnStyle = {backgroundColor: '#00d0ff'}
 
@@ -50,7 +49,7 @@ export function Game() {
     }
 
     const updateNumberOfPlayers = (ev) => {
-        setNumberOfPlayers(ev.target.value);
+        dispatch(setNumberOfPlayers(ev.target.value))
     }
     
     return (

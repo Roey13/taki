@@ -6,7 +6,7 @@ export function PlayersCards({card, isTurn}) {
 
     const dispatch = useDispatch()
 
-    const { playingDeck, playersDecks, playersTurn} = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers} = useSelector(state => state.cardsModule)
 
     const playTurn = (card) =>{
         const TempPlayingDeck = playingDeck
@@ -24,7 +24,12 @@ export function PlayersCards({card, isTurn}) {
 
         currPlayersDeck.splice(cardIdx, 1)
 
-        dispatch(setPlayersTurn(playersTurn + 1))
+        if (playersTurn == numberOfPlayers) {
+            dispatch(setPlayersTurn(1))
+        } else {
+            dispatch(setPlayersTurn(playersTurn + 1))
+        }
+
     }
 
     if (isTurn) {

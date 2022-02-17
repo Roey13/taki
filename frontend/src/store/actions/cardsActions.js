@@ -40,3 +40,11 @@ export function setPlayersTurn(playersTurn){
     } catch (err) {}
   }
 }
+
+export function setNumberOfPlayers(num){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'SET_NUMBER_OF_PLAYERS', num })
+    } catch (err) {}
+  }
+}
