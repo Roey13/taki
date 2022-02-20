@@ -1,11 +1,19 @@
-.game-page-container{
+.game-page-container {
 
-    .players-container{
+    display: flex;
+
+    .players-container {
         display: flex;
 
-        .player-container{
+        .player-container {
             border: 1px solid black;
         }
     }
-    
+
+    .playing-area {
+        
+        img {
+            height: 500px;
+        }
+    }
 }

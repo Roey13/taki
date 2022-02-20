@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 import { Draw } from '../cmps/Draw'
+import { GetCardImg } from '../cmps/GetCardImg'
 
 export function Game() {
 
@@ -76,7 +77,7 @@ export function Game() {
             </div>
             {playingDeck &&
                 <div className="playing-area">
-                    <div>{playingDeck[0].cardName}</div>
+                    <GetCardImg card={playingDeck[0]} className={'playing-deck'}/>
                     <Draw />
                 </div>
             }
