@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn } from '../store/actions/cardsActions.js'
 
 export function HandleChangeColor() {
 
     const dispatch = useDispatch()
 
-    const { playingDeck } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers } = useSelector(state => state.cardsModule)
 
     const [selectedColor, setSelectedColor] = useState('')
 
@@ -20,6 +20,11 @@ export function HandleChangeColor() {
             cardName: 'tempColor', cardColor: [selectedColor], isSpecial: true , shape: 'changeColor',
         })
         dispatch(getPlayingDeck(playingDeck))
+        if (playersTurn == numberOfPlayers) {
+            dispatch(setPlayersTurn(1))
+        } else {
+            dispatch(setPlayersTurn(playersTurn + 1))
+        }
     }
 
 

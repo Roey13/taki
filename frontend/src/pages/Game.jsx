@@ -81,7 +81,7 @@ export function Game() {
                 <div className="playing-area">
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'}/>
                     <Draw />
-                    {    console.log('playingDeck', playingDeck)}
+                    {console.log('playingDeck', playingDeck)}
                     {playingDeck[0].cardName.includes('changeColor') && <HandleChangeColor />}
                 </div>
             }

@@ -13,8 +13,8 @@ export function PlayersCards({ card, isTurn }) {
 
     const playTurn = (card) => {
 
-        if (playingDeck[0].cardName.includes('tempColor')){
-            let tempPlayingDeck = playingDeck.splice(0, 1)
+        if (playingDeck.length > 1 && playingDeck[1].cardName.includes('tempColor')){
+            let tempPlayingDeck = playingDeck.splice(1, 1)
             dispatch(getPlayingDeck(tempPlayingDeck))
         }
 
