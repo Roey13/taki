@@ -4,6 +4,7 @@ import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumbe
 import { PlayersCards } from '../cmps/PlayersCards'
 import { Draw } from '../cmps/Draw'
 import { GetCardImg } from '../cmps/GetCardImg'
+import { HandleChangeColor } from '../cmps/HandleChangeColor'
 
 export function Game() {
 
@@ -54,6 +55,7 @@ export function Game() {
         dispatch(setNumberOfPlayers(ev.target.value))
     }
 
+
     return (
         <div className="game-page-container">
             {!playingDeck &&
@@ -79,6 +81,8 @@ export function Game() {
                 <div className="playing-area">
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'}/>
                     <Draw />
+                    {    console.log('playingDeck', playingDeck)}
+                    {playingDeck[0].cardName.includes('changeColor') && <HandleChangeColor />}
                 </div>
             }
 

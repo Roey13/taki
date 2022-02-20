@@ -13,6 +13,11 @@ export function PlayersCards({ card, isTurn }) {
 
     const playTurn = (card) => {
 
+        if (playingDeck[0].cardName.includes('tempColor')){
+            let tempPlayingDeck = playingDeck.splice(0, 1)
+            dispatch(getPlayingDeck(tempPlayingDeck))
+        }
+
         const TempPlayingDeck = playingDeck
         if (checkIfLegal(card, TempPlayingDeck)) {
             TempPlayingDeck.unshift(card)

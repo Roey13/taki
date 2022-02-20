@@ -1,19 +1,25 @@
+import { HandleChangeColor } from '../cmps/HandleChangeColor.jsx'
+
 export function handleSpecial(card) {
+
 
     switch (card.shape) {
         case 'plus':
-            console.log('card.shape', card.shape);
+            break;
+        case 'stop':
+            break;
+        case 'king':
+            break;
         case '+2':
             console.log('card.shape', card.shape);
+            break;
         case 'taki':
             console.log('card.shape', card.shape);
-        case 'stop':
-            console.log('card.shape', card.shape);
+            break;
         case 'revert':
             console.log('card.shape', card.shape);
-        case 'king':
-            console.log('card.shape', card.shape);
+            break;
         case 'changeColor':
-            console.log('card.shape', card.shape);
+            break;
     }
 }
