@@ -6,7 +6,7 @@ export function HandleChangeColor() {
 
     const dispatch = useDispatch()
 
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, gameDirection } = useSelector(state => state.cardsModule)
 
     const [selectedColor, setSelectedColor] = useState('')
 
@@ -24,10 +24,18 @@ export function HandleChangeColor() {
     }
 
     const setNextTurn = () => {
-        if (playersTurn == numberOfPlayers) {
-            dispatch(setPlayersTurn(1))
+        if (gameDirection === 'forward'){
+            if (playersTurn == numberOfPlayers) {
+                dispatch(setPlayersTurn(1))
+            } else {
+                dispatch(setPlayersTurn(playersTurn + 1))
+            }
         } else {
-            dispatch(setPlayersTurn(playersTurn + 1))
+            if (playersTurn == 1) {
+                dispatch(setPlayersTurn(numberOfPlayers))
+            } else {
+                dispatch(setPlayersTurn(playersTurn - 1))
+            }
         }
     }
 

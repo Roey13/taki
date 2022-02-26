@@ -57,3 +57,14 @@ export function toggleOpenTaki(openTaki){
     } catch (err) {}
   }
 }
+
+export function toggleGameDirection(gameDirection){
+  let newDirection
+  if (gameDirection === 'forward') newDirection = 'backwards'
+  else newDirection = 'forward'
+  return async dispatch => {
+    try {
+      dispatch({ type: 'TOGGLE_GAME_DIRECTION', newDirection })
+    } catch (err) {}
+  }
+}

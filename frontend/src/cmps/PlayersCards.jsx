@@ -9,87 +9,87 @@ export function PlayersCards({ card, isTurn }) {
 
     const dispatch = useDispatch()
 
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection } = useSelector(state => state.cardsModule)
 
     const playTurn = (card) => {
-
-        if (isOpenTaki.open){
+        if (isOpenTaki.open) {
 
             const currPlayersDeck = playersDecks[playersTurn - 1].deck
             let isColorIncluded = 0
-            currPlayersDeck.map((card)=>{
-                if (card.cardColor.includes(isOpenTaki.color)){
+            currPlayersDeck.map((card) => {
+                if (card.cardColor.includes(isOpenTaki.color)) {
                     isColorIncluded++
                 }
             })
-            if (isColorIncluded > 1){
+            if (isColorIncluded > 1) {
                 handlePlayersDeck()
-            } else{
+            } else {
                 handlePlayersDeck()
                 setNextTurn()
-                dispatch(toggleOpenTaki({open: false, color: ''}))
+                dispatch(toggleOpenTaki({ open: false, color: '' }))
             }
 
 
         } else {
-            if (playingDeck.length > 1 && playingDeck[1].cardName.includes('tempColor')){
+            if (playingDeck.length > 1 && playingDeck[1].cardName.includes('tempColor')) {
                 let tempPlayingDeck = playingDeck.splice(1, 1)
                 dispatch(getPlayingDeck(tempPlayingDeck))
             }
-    
+
             handlePlayersDeck()
-            const currPlayersDeck = playersDecks[playersTurn - 1].deck
-                if (card.isSpecial) {
-                    if (handleSpecial(card)){
-                        const currClr = card.cardColor[0]
-                        dispatch(toggleOpenTaki({open: true, color: currClr}))
-                        return
-                    }
-                } else if (isOpenTaki.open === true){
-                        currPlayersDeck.map((card)=>{
-                            if (card.cardColor.includes(isOpenTaki.color)){
-                                return
-                            } else{
-                                setNextTurn()
-                            }
-                        })
-                }else{
-                    setNextTurn()
+            if (card.isSpecial) {
+                if (handleSpecial(card)) {
+                    const currClr = card.cardColor[0]
+                    dispatch(toggleOpenTaki({ open: true, color: currClr }))
+                    return
                 }
+            } else {
+                setNextTurn()
             }
         }
+    }
 
-        const setNextTurn = () => {
+
+    const setNextTurn = () => {
+        if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
                 dispatch(setPlayersTurn(1))
             } else {
                 dispatch(setPlayersTurn(playersTurn + 1))
             }
+        } else {
+            if (playersTurn == 1) {
+                dispatch(setPlayersTurn(numberOfPlayers))
+            } else {
+                dispatch(setPlayersTurn(playersTurn - 1))
+            }
         }
-    
-        const handlePlayersDeck = () =>{
-            if (checkIfLegal(card, playingDeck)) {
-                playingDeck.unshift(card)
-                dispatch(getPlayingDeck(playingDeck))
-    
-                const currPlayersDeck = playersDecks[playersTurn - 1].deck
-    
-                let cardIdx
-                currPlayersDeck.map((currCard, i) => {
-                    if (currCard.cardName === card.cardName) cardIdx = i
-                })
-    
-                currPlayersDeck.splice(cardIdx, 1)
-        }
-      
     }
 
+    const handlePlayersDeck = () => {
+        if (checkIfLegal(card, playingDeck)) {
+            playingDeck.unshift(card)
+            dispatch(getPlayingDeck(playingDeck))
 
+            const currPlayersDeck = playersDecks[playersTurn - 1].deck
+
+            let cardIdx
+            currPlayersDeck.map((currCard, i) => {
+                if (currCard.cardName === card.cardName) cardIdx = i
+            })
+
+            currPlayersDeck.splice(cardIdx, 1)
+        }
+    }
+
+    const handleSpecial = () => {
+
+    }
 
     if (isTurn) {
-        return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card}/></div>
+        return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card} /></div>
     } else {
-        return <div><GetCardImg card={card}/></div>
+        return <div><GetCardImg card={card} /></div>
     }
 
 }

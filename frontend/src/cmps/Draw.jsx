@@ -12,7 +12,8 @@ export function Draw(){
         playersDecks,
         playingDeck,
         playersTurn,
-        numberOfPlayers
+        numberOfPlayers,
+        gameDirection
     } = useSelector(state => state.cardsModule)
 
     const drawCard = () => {
@@ -26,10 +27,18 @@ export function Draw(){
     }
 
     const setNextTurn = () => {
-        if (playersTurn == numberOfPlayers) {
-            dispatch(setPlayersTurn(1))
+        if (gameDirection === 'forward'){
+            if (playersTurn == numberOfPlayers) {
+                dispatch(setPlayersTurn(1))
+            } else {
+                dispatch(setPlayersTurn(playersTurn + 1))
+            }
         } else {
-            dispatch(setPlayersTurn(playersTurn + 1))
+            if (playersTurn == 1) {
+                dispatch(setPlayersTurn(numberOfPlayers))
+            } else {
+                dispatch(setPlayersTurn(playersTurn - 1))
+            }
         }
     }
 
