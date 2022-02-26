@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki, toggleGameDirection } from '../store/actions/cardsActions.js'
 import { checkIfLegal } from '../helpers/checkIfLegal.js';
 import { handleSpecial } from '../helpers/handleSpecial.js';
 import { GetCardImg } from './GetCardImg';
@@ -35,31 +35,24 @@ export function PlayersCards({ card, isTurn }) {
                 let tempPlayingDeck = playingDeck.splice(1, 1)
                 dispatch(getPlayingDeck(tempPlayingDeck))
             }
-
             handlePlayersDeck()
-            if (card.isSpecial) {
-                if (handleSpecial(card)) {
-                    const currClr = card.cardColor[0]
-                    dispatch(toggleOpenTaki({ open: true, color: currClr }))
-                    return
-                }
-            } else {
-                setNextTurn()
-            }
+            if (card.isSpecial) handleSpecial()
+            else setNextTurn()
+            
         }
     }
 
 
     const setNextTurn = () => {
-        if (gameDirection === 'forward') {
+        if (gameDirection === 'forward'){
             if (playersTurn == numberOfPlayers) {
                 dispatch(setPlayersTurn(1))
             } else {
                 dispatch(setPlayersTurn(playersTurn + 1))
             }
         } else {
-            if (playersTurn == 1) {
-                dispatch(setPlayersTurn(numberOfPlayers))
+            if (playersTurn === 1) {
+                dispatch(setPlayersTurn(+numberOfPlayers))
             } else {
                 dispatch(setPlayersTurn(playersTurn - 1))
             }
@@ -84,7 +77,34 @@ export function PlayersCards({ card, isTurn }) {
 
     const handleSpecial = () => {
 
+        const { shape } = card
+
+        if (shape === 'plus' || shape === 'king') return
+
+        if (shape === 'revert') handleRevert()
+
     }
+
+    const handleRevert = () => {
+        if (gameDirection === 'forward'){
+            dispatch(toggleGameDirection('backwards'))
+            if (playersTurn === 1) {
+                dispatch(setPlayersTurn(+numberOfPlayers))
+            } else {
+                dispatch(setPlayersTurn(playersTurn - 1))
+            }
+        }else {
+            dispatch(toggleGameDirection('forward'))
+            if (playersTurn == numberOfPlayers) {
+                dispatch(setPlayersTurn(1))
+            } else {
+                dispatch(setPlayersTurn(playersTurn + 1))
+            }
+        }
+
+
+    }
+
 
     if (isTurn) {
         return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card} /></div>
@@ -93,3 +113,11 @@ export function PlayersCards({ card, isTurn }) {
     }
 
 }
+
+
+
+// if (handleSpecial(card)) {
+//     const currClr = card.cardColor[0]
+//     dispatch(toggleOpenTaki({ open: true, color: currClr }))
+//     return
+// }

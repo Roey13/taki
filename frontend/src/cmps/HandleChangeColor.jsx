@@ -31,8 +31,8 @@ export function HandleChangeColor() {
                 dispatch(setPlayersTurn(playersTurn + 1))
             }
         } else {
-            if (playersTurn == 1) {
-                dispatch(setPlayersTurn(numberOfPlayers))
+            if (playersTurn === 1) {
+                dispatch(setPlayersTurn(+numberOfPlayers))
             } else {
                 dispatch(setPlayersTurn(playersTurn - 1))
             }

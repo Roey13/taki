@@ -50,7 +50,6 @@ export function setNumberOfPlayers(num){
 }
 
 export function toggleOpenTaki(openTaki){
-  console.log('openTaki', openTaki);
   return async dispatch => {
     try {
       dispatch({ type: 'TOGGLE_OPEN_TAKI', openTaki })
@@ -58,10 +57,7 @@ export function toggleOpenTaki(openTaki){
   }
 }
 
-export function toggleGameDirection(gameDirection){
-  let newDirection
-  if (gameDirection === 'forward') newDirection = 'backwards'
-  else newDirection = 'forward'
+export function toggleGameDirection(newDirection){
   return async dispatch => {
     try {
       dispatch({ type: 'TOGGLE_GAME_DIRECTION', newDirection })
