@@ -48,3 +48,12 @@ export function setNumberOfPlayers(num){
     } catch (err) {}
   }
 }
+
+export function toggleOpenTaki(openTaki){
+  console.log('openTaki', openTaki);
+  return async dispatch => {
+    try {
+      dispatch({ type: 'TOGGLE_OPEN_TAKI', openTaki })
+    } catch (err) {}
+  }
+}

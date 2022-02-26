@@ -22,6 +22,10 @@ export function Draw(){
         currPlayersDeck.push(drawOne[0])
         dispatch(getPlayersDecks(tempPlayersDecks))
         
+        setNextTurn()
+    }
+
+    const setNextTurn = () => {
         if (playersTurn == numberOfPlayers) {
             dispatch(setPlayersTurn(1))
         } else {

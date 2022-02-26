@@ -58,11 +58,13 @@ export function Game() {
 
     return (
         <div className="game-page-container">
+
             {!playingDeck &&
                 <div className="game-options-container">
                     <button onClick={startGame}>Start Game</button>
                     <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
                 </div>}
+
             <div className="players-container">
                 {playersDecks.map((deck, i) => {
                     let style = {}
@@ -77,14 +79,14 @@ export function Game() {
                     </div>
                 })}
             </div>
+
             {playingDeck &&
                 <div className="playing-area">
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'}/>
                     <Draw />
                     {console.log('playingDeck', playingDeck)}
                     {playingDeck[0].cardName.includes('changeColor') && <HandleChangeColor />}
-                </div>
-            }
+                </div>}
 
         </div>
     )

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki } from '../store/actions/cardsActions.js'
 import { checkIfLegal } from '../helpers/checkIfLegal.js';
 import { handleSpecial } from '../helpers/handleSpecial.js';
 import { GetCardImg } from './GetCardImg';
@@ -9,41 +9,82 @@ export function PlayersCards({ card, isTurn }) {
 
     const dispatch = useDispatch()
 
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki } = useSelector(state => state.cardsModule)
 
     const playTurn = (card) => {
 
-        if (playingDeck.length > 1 && playingDeck[1].cardName.includes('tempColor')){
-            let tempPlayingDeck = playingDeck.splice(1, 1)
-            dispatch(getPlayingDeck(tempPlayingDeck))
-        }
+        if (isOpenTaki.open){
 
-        const TempPlayingDeck = playingDeck
-        if (checkIfLegal(card, TempPlayingDeck)) {
-            TempPlayingDeck.unshift(card)
-            dispatch(getPlayingDeck(TempPlayingDeck))
-
-            let tempPlayersDecks = playersDecks
-            const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck
-
-            let cardIdx
-            currPlayersDeck.map((currCard, i) => {
-                if (currCard.cardName === card.cardName) cardIdx = i
+            const currPlayersDeck = playersDecks[playersTurn - 1].deck
+            let isColorIncluded = 0
+            currPlayersDeck.map((card)=>{
+                if (card.cardColor.includes(isOpenTaki.color)){
+                    isColorIncluded++
+                }
             })
+            if (isColorIncluded > 1){
+                handlePlayersDeck()
+            } else{
+                handlePlayersDeck()
+                setNextTurn()
+                dispatch(toggleOpenTaki({open: false, color: ''}))
+            }
 
-            currPlayersDeck.splice(cardIdx, 1)
 
-            if (card.isSpecial){
-                handleSpecial(card)
-            }else{
-                if (playersTurn == numberOfPlayers) {
-                    dispatch(setPlayersTurn(1))
-                } else {
-                    dispatch(setPlayersTurn(playersTurn + 1))
+        } else {
+            if (playingDeck.length > 1 && playingDeck[1].cardName.includes('tempColor')){
+                let tempPlayingDeck = playingDeck.splice(1, 1)
+                dispatch(getPlayingDeck(tempPlayingDeck))
+            }
+    
+            handlePlayersDeck()
+            const currPlayersDeck = playersDecks[playersTurn - 1].deck
+                if (card.isSpecial) {
+                    if (handleSpecial(card)){
+                        const currClr = card.cardColor[0]
+                        dispatch(toggleOpenTaki({open: true, color: currClr}))
+                        return
+                    }
+                } else if (isOpenTaki.open === true){
+                        currPlayersDeck.map((card)=>{
+                            if (card.cardColor.includes(isOpenTaki.color)){
+                                return
+                            } else{
+                                setNextTurn()
+                            }
+                        })
+                }else{
+                    setNextTurn()
                 }
             }
         }
+
+        const setNextTurn = () => {
+            if (playersTurn == numberOfPlayers) {
+                dispatch(setPlayersTurn(1))
+            } else {
+                dispatch(setPlayersTurn(playersTurn + 1))
+            }
+        }
+    
+        const handlePlayersDeck = () =>{
+            if (checkIfLegal(card, playingDeck)) {
+                playingDeck.unshift(card)
+                dispatch(getPlayingDeck(playingDeck))
+    
+                const currPlayersDeck = playersDecks[playersTurn - 1].deck
+    
+                let cardIdx
+                currPlayersDeck.map((currCard, i) => {
+                    if (currCard.cardName === card.cardName) cardIdx = i
+                })
+    
+                currPlayersDeck.splice(cardIdx, 1)
+        }
+      
     }
+
+
 
     if (isTurn) {
         return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card}/></div>

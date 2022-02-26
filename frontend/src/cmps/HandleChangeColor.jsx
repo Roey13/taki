@@ -20,6 +20,10 @@ export function HandleChangeColor() {
             cardName: 'tempColor', cardColor: [selectedColor], isSpecial: true , shape: 'changeColor',
         })
         dispatch(getPlayingDeck(playingDeck))
+        setNextTurn()
+    }
+
+    const setNextTurn = () => {
         if (playersTurn == numberOfPlayers) {
             dispatch(setPlayersTurn(1))
         } else {
