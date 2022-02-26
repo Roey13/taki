@@ -38,13 +38,13 @@ export function PlayersCards({ card, isTurn }) {
             handlePlayersDeck()
             if (card.isSpecial) handleSpecial()
             else setNextTurn()
-            
+
         }
     }
 
 
     const setNextTurn = () => {
-        if (gameDirection === 'forward'){
+        if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
                 dispatch(setPlayersTurn(1))
             } else {
@@ -77,23 +77,28 @@ export function PlayersCards({ card, isTurn }) {
 
     const handleSpecial = () => {
 
-        const { shape } = card
+        const { shape, cardColor } = card
 
         if (shape === 'plus' || shape === 'king') return
 
         if (shape === 'revert') handleRevert()
 
+        if (shape === 'taki' && cardColor.length === 1) {
+            const currClr = card.cardColor[0]
+            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+        }
+
     }
 
     const handleRevert = () => {
-        if (gameDirection === 'forward'){
+        if (gameDirection === 'forward') {
             dispatch(toggleGameDirection('backwards'))
             if (playersTurn === 1) {
                 dispatch(setPlayersTurn(+numberOfPlayers))
             } else {
                 dispatch(setPlayersTurn(playersTurn - 1))
             }
-        }else {
+        } else {
             dispatch(toggleGameDirection('forward'))
             if (playersTurn == numberOfPlayers) {
                 dispatch(setPlayersTurn(1))
