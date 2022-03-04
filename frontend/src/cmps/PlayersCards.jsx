@@ -31,14 +31,9 @@ export function PlayersCards({ card, isTurn }) {
 
 
         } else {
-            if (playingDeck.length > 1 && playingDeck[1].cardName.includes('tempColor')) {
-                let tempPlayingDeck = playingDeck.splice(1, 1)
-                dispatch(getPlayingDeck(tempPlayingDeck))
-            }
             handlePlayersDeck()
             if (card.isSpecial) handleSpecial()
             else setNextTurn()
-
         }
     }
 
@@ -88,6 +83,8 @@ export function PlayersCards({ card, isTurn }) {
             dispatch(toggleOpenTaki({ open: true, color: currClr }))
         }
 
+        if (shape === 'stop') handleStop()
+
     }
 
     const handleRevert = () => {
@@ -106,8 +103,27 @@ export function PlayersCards({ card, isTurn }) {
                 dispatch(setPlayersTurn(playersTurn + 1))
             }
         }
+    }
 
-
+    const handleStop = () => {
+        let playersAmount = +numberOfPlayers
+        if (gameDirection === 'forward') {
+            if (playersTurn === playersAmount) {
+                dispatch(setPlayersTurn(2))
+            } else if (playersTurn === playersAmount - 1) {
+                dispatch(setPlayersTurn(1))
+            } else {
+                dispatch(setPlayersTurn(playersTurn + 2))
+            }
+        } else {
+            if (playersTurn === 1) {
+                dispatch(setPlayersTurn(playersAmount - 1))
+            } else if (playersTurn === 2) {
+                dispatch(setPlayersTurn(playersAmount))
+            } else {
+                dispatch(setPlayersTurn(playersTurn - 2))
+            }
+        }
     }
 
 
