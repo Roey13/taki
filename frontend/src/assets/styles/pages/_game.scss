@@ -1,18 +1,44 @@
 .game-page-container {
-
-    display: flex;
+   position: relative;
+   height: 100%;
+   width: 100%;
 
     .players-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
 
-        .player-container {
-            border: 1px solid black;
-        }
+    .player-container-3 {
+        grid-area: 1 / 2 / 2 / 5;
+        display: flex;
+    }
+    .player-container-1 {
+        grid-area: 5 / 2 / 6 / 5;
+        display: flex;
+    }
+    .player-container-4 {
+        grid-area: 2 / 5 / 5 / 6;
+        display: flex;
+        flex-direction: column;
+    }
+    .player-container-2 {
+        grid-area: 2 / 1 / 5 / 2;
+        display: flex;
+        flex-direction: column;
     }
 
     .playing-area {
-        
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img {
+            z-index: 1;
             height: 500px;
         }
     }

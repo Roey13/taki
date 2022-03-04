@@ -72,7 +72,7 @@ export function Game() {
                 {playersDecks.map((deck, i) => {
                     let style = {}
                     if (deck.playerNo === playersTurn) style = currTurnStyle
-                    return <div className="player-container" key={i}>
+                    return <div className={`player-container-${deck.playerNo}`} key={i}>
                         <div style={style}>Player No. {deck.playerNo}</div>
                         {deck.deck.map((card) => {
                             return (
