@@ -4,9 +4,11 @@ const initialState = {
   playersDecks: [],
   playingDeck: null,
   playersTurn: 1,
-  numberOfPlayers: 2,
+  numberOfPlayers: 4,
   isOpenTaki: { open: false, color: '' },
-  gameDirection: 'forward'
+  gameDirection: 'forward',
+  plus2Mode: false,
+  deckDraw: 0,
 }
 
 export function cardsReducer(state = initialState, action = {}) {
@@ -27,6 +29,10 @@ export function cardsReducer(state = initialState, action = {}) {
       return { ...state, isOpenTaki: action.openTaki }
     case 'TOGGLE_GAME_DIRECTION':
       return { ...state, gameDirection: action.newDirection }
+    case 'TOGGLE_PLUS_2_MODE':
+      return { ...state, plus2Mode: action.bool }
+    case 'SET_DECK_DRAW':
+      return { ...state, deckDraw: action.num }
     default:
       return state
   }

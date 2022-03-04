@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, setPlayersTurn } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, setPlayersTurn, togglePlus2Mode, setDeckDraw } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 
-export function Draw(){
+export function Draw() {
 
     const dispatch = useDispatch()
     const {
@@ -13,25 +13,55 @@ export function Draw(){
         playingDeck,
         playersTurn,
         numberOfPlayers,
-        gameDirection
+        gameDirection,
+        deckDraw,
+        plus2Mode
     } = useSelector(state => state.cardsModule)
 
     const drawCard = () => {
-        if (shuffledDeck[0].cardName === 'tempColor' || shuffledDeck[0].cardName === 'tempTaki'){
-            shuffledDeck.splice(0, 1)
+        if (!plus2Mode) {
+            if (shuffledDeck[0].cardName === 'tempColor' || shuffledDeck[0].cardName === 'tempTaki') {
+                shuffledDeck.splice(0, 1)
+            }
+
+            const drawOne = shuffledDeck.splice(0, 1)
+            const tempPlayersDecks = playersDecks
+            const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck;
+            currPlayersDeck.push(drawOne[0])
+            dispatch(getPlayersDecks(tempPlayersDecks))
+
+            setNextTurn()
+        } else {
+            drawPlus2()
         }
-        
-        const drawOne = shuffledDeck.splice(0, 1)
-        const tempPlayersDecks = playersDecks
-        const currPlayersDeck = tempPlayersDecks[playersTurn-1].deck;
-        currPlayersDeck.push(drawOne[0])
-        dispatch(getPlayersDecks(tempPlayersDecks))
-        
-        setNextTurn()
+    }
+
+    const drawPlus2 = () => {
+        let drawCards = shuffledDeck.splice(0, +deckDraw)
+        drawCards.map((card, i) => {
+            if (card.cardName === 'tempColor' || card.cardName === 'tempTaki') {
+                drawCards.splice(i, 1)
+            }
+        })
+        if (drawCards.length != deckDraw) drawPlus2()
+        else {
+            const tempPlayersDecks = playersDecks
+            const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck;
+            drawCards.map((card) => {
+                console.log('card', card);
+                currPlayersDeck.push(card)
+            })
+            console.log('currPlayersDeck', currPlayersDeck);
+            dispatch(getPlayersDecks(tempPlayersDecks))
+
+            setNextTurn()
+        }
+        dispatch(togglePlus2Mode(false))
+        dispatch(setDeckDraw(0))
     }
 
     const setNextTurn = () => {
-        if (gameDirection === 'forward'){
+        if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
                 dispatch(setPlayersTurn(1))
             } else {
@@ -46,5 +76,5 @@ export function Draw(){
         }
     }
 
-    return <img src="imgs/stack.svg" alt="" onClick={drawCard} style={{cursor: 'pointer'}}/>
+    return <img src="imgs/stack.svg" alt="" onClick={drawCard} style={{ cursor: 'pointer' }} />
 }

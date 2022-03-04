@@ -64,3 +64,19 @@ export function toggleGameDirection(newDirection){
     } catch (err) {}
   }
 }
+
+export function togglePlus2Mode(bool){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'TOGGLE_PLUS_2_MODE', bool })
+    } catch (err) {}
+  }
+}
+
+export function setDeckDraw(num){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'SET_DECK_DRAW', num })
+    } catch (err) {}
+  }
+}

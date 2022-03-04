@@ -3,7 +3,9 @@ export function GetCardImg({card}) {
     let tempName = card.cardName;
     if (card.cardName === 'tempColor'){
         tempName = 'changeColor' + card.cardColor[0];
-    }else {
+    } else if (card.cardName === 'tempTaki') {
+        tempName = 'taki' + card.cardColor[0];
+    }else{
         tempName = tempName.split(' ').join('');
         tempName = tempName.slice(0, -1)
     }
