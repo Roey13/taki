@@ -18,7 +18,8 @@ export function Game() {
         numberOfPlayers,
         gameDirection,
         plus2Mode,
-        deckDraw
+        deckDraw,
+        changeColorMode
     } = useSelector(state => state.cardsModule)
 
     const currTurnStyle = { backgroundColor: '#00d0ff' }
@@ -90,7 +91,7 @@ export function Game() {
                     {plus2Mode && <div>+2MODE!!!</div>}
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'} />
                     <Draw />
-                    {playingDeck[0].cardName.includes('changeColor') && <HandleChangeColor />}
+                    {changeColorMode && <HandleChangeColor />}
                 </div>}
 
         </div>

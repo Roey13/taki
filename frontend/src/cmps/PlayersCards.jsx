@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki, toggleGameDirection, togglePlus2Mode, setDeckDraw } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki, toggleGameDirection, togglePlus2Mode, setDeckDraw, toggleColorMode } from '../store/actions/cardsActions.js'
 import { checkIfLegal } from '../helpers/checkIfLegal.js';
 import { handleSpecial } from '../helpers/handleSpecial.js';
 import { GetCardImg } from './GetCardImg';
@@ -9,7 +9,7 @@ export function PlayersCards({ card, isTurn }) {
 
     const dispatch = useDispatch()
 
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection, plus2Mode, deckDraw } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection, plus2Mode, deckDraw, changeColorMode } = useSelector(state => state.cardsModule)
 
     const playTurn = (card) => {
         if (isOpenTaki.open) {
@@ -30,17 +30,19 @@ export function PlayersCards({ card, isTurn }) {
             }
 
 
-        } else if (plus2Mode){
+        } else if (plus2Mode) {
             if (card.shape === '+2' || card.shape === 'king') handlePlus2Mode()
         } else {
             handlePlayersDeck()
             if (card.isSpecial) handleSpecial()
-            else setNextTurn()
+            else {
+                if (checkIfLegal(card, playingDeck)) setNextTurn()
+            }
         }
     }
 
     const handlePlus2Mode = () => {
-        if (card.shape === 'king'){
+        if (card.shape === 'king') {
             dispatch(togglePlus2Mode(false))
             dispatch(setDeckDraw(0))
             handlePlayersDeck()
@@ -87,24 +89,29 @@ export function PlayersCards({ card, isTurn }) {
 
     const handleSpecial = () => {
 
-        const { shape, cardColor } = card
+        if (checkIfLegal(card, playingDeck)) {
 
-        if (shape === 'plus' || shape === 'king') return
+            const { shape, cardColor } = card
 
-        if (shape === 'revert') handleRevert()
+            if (shape === 'changeColor') dispatch(toggleColorMode(true))
 
-        if (shape === 'taki' && cardColor.length === 1) {
-            const currClr = card.cardColor[0]
-            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+            if (shape === 'plus' || shape === 'king') return
+
+            if (shape === 'revert') handleRevert()
+
+            if (shape === 'taki' && cardColor.length === 1) {
+                const currClr = card.cardColor[0]
+                dispatch(toggleOpenTaki({ open: true, color: currClr }))
+            }
+
+            if (shape === 'taki' && cardColor.length > 1) {
+                handleSuperTaki()
+            }
+
+            if (shape === 'stop') handleStop()
+
+            if (shape === '+2') handlePlus2()
         }
-
-        if (shape === 'taki' && cardColor.length > 1) {
-            handleSuperTaki()
-        }
-
-        if (shape === 'stop') handleStop()
-
-        if (shape === '+2') handlePlus2()
 
     }
 
@@ -154,19 +161,19 @@ export function PlayersCards({ card, isTurn }) {
     }
 
     const handleSuperTaki = () => {
-        if (playingDeck[1].cardColor.length === 1){
+        if (playingDeck[1].cardColor.length === 1) {
             const currClr = playingDeck[1].cardColor[0]
             console.log('currClr', currClr);
             dispatch(toggleOpenTaki({ open: true, color: currClr }))
             playingDeck.unshift({
-                cardName: 'tempTaki', cardColor: [currClr], isSpecial: true , shape: 'taki',
+                cardName: 'tempTaki', cardColor: [currClr], isSpecial: true, shape: 'taki',
             })
         }
     }
 
 
 
-    if (isTurn) {
+    if (isTurn && !changeColorMode) {
         return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card} /></div>
     } else {
         return <div><GetCardImg card={card} /></div>

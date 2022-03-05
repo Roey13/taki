@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleColorMode } from '../store/actions/cardsActions.js'
 
 export function HandleChangeColor() {
 
@@ -20,6 +20,7 @@ export function HandleChangeColor() {
             cardName: 'tempColor', cardColor: [selectedColor], isSpecial: true , shape: 'changeColor',
         })
         dispatch(getPlayingDeck(playingDeck))
+        dispatch(toggleColorMode(false))
         setNextTurn()
     }
 
@@ -41,7 +42,7 @@ export function HandleChangeColor() {
 
 
     return (
-        <div className="colorSelect">
+        <div className="color-select">
             <option value='green' onClick={handleClick}>Green</option>
             <option value='red' onClick={handleClick}>Red</option>
             <option value='blue' onClick={handleClick}>Blue</option>

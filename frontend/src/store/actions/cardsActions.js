@@ -80,3 +80,11 @@ export function setDeckDraw(num){
     } catch (err) {}
   }
 }
+
+export function toggleColorMode(boolean){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'TOGGLE_CHANGE_COLOR_MODE', boolean })
+    } catch (err) {}
+  }
+}
