@@ -15,24 +15,26 @@ export function Draw() {
         numberOfPlayers,
         gameDirection,
         deckDraw,
-        plus2Mode
+        plus2Mode,
+        changeColorMode
     } = useSelector(state => state.cardsModule)
 
     const drawCard = () => {
-        if (!plus2Mode) {
-            if (shuffledDeck[0].cardName === 'tempColor' || shuffledDeck[0].cardName === 'tempTaki') {
-                shuffledDeck.splice(0, 1)
+        if (!changeColorMode) {
+            if (!plus2Mode) {
+                if (shuffledDeck[0].cardName === 'tempColor' || shuffledDeck[0].cardName === 'tempTaki') {
+                    shuffledDeck.splice(0, 1)
+                }
+
+                const drawOne = shuffledDeck.splice(0, 1)
+                const tempPlayersDecks = playersDecks
+                const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck;
+                currPlayersDeck.push(drawOne[0])
+                dispatch(getPlayersDecks(tempPlayersDecks))
+                setNextTurn()
+            } else {
+                drawPlus2()
             }
-
-            const drawOne = shuffledDeck.splice(0, 1)
-            const tempPlayersDecks = playersDecks
-            const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck;
-            currPlayersDeck.push(drawOne[0])
-            dispatch(getPlayersDecks(tempPlayersDecks))
-
-            setNextTurn()
-        } else {
-            drawPlus2()
         }
     }
 

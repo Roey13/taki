@@ -46,7 +46,7 @@ export function HandleChangeColor() {
             <option value='green' onClick={handleClick}>Green</option>
             <option value='red' onClick={handleClick}>Red</option>
             <option value='blue' onClick={handleClick}>Blue</option>
-            <option value='Yellow' onClick={handleClick}>Yellow</option>
+            <option value='yellow' onClick={handleClick}>Yellow</option>
             <button onClick={createColorCard}>Click Me</button>
         </div>
     )

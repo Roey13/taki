@@ -21,7 +21,11 @@ export function PlayersCards({ card, isTurn }) {
                     isColorIncluded++
                 }
             })
-            if (isColorIncluded > 1) {
+            if (isColorIncluded === 1){
+                setNextTurn()
+            }
+            else if (isColorIncluded === 1 && (card.isSpecial)) handleSpecial()
+            else if (isColorIncluded > 1) {
                 handlePlayersDeck()
             } else {
                 handlePlayersDeck()
@@ -163,15 +167,14 @@ export function PlayersCards({ card, isTurn }) {
     const handleSuperTaki = () => {
         if (playingDeck[1].cardColor.length === 1) {
             const currClr = playingDeck[1].cardColor[0]
-            console.log('currClr', currClr);
             dispatch(toggleOpenTaki({ open: true, color: currClr }))
             playingDeck.unshift({
                 cardName: 'tempTaki', cardColor: [currClr], isSpecial: true, shape: 'taki',
             })
-        }
+        } else dispatch(toggleColorMode(true))
     }
 
-
+    console.log('playingDeck', playingDeck);
 
     if (isTurn && !changeColorMode) {
         return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card} /></div>
