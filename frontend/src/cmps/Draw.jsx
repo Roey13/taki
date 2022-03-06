@@ -20,6 +20,15 @@ export function Draw() {
     } = useSelector(state => state.cardsModule)
 
     const drawCard = () => {
+        if (shuffledDeck.length === 2){
+            const playingDeckNotFirst = playingDeck.splice (1, playingDeck.length)
+            shuffledDeck.push(...playingDeckNotFirst)
+            dispatch(getShuffledDeck(shuffledDeck))
+            dispatch(getPlayingDeck(playingDeck))
+        }
+        
+        if (shuffledDeck.length === 0) return
+
         if (!changeColorMode) {
             if (!plus2Mode) {
                 if (shuffledDeck[0].cardName === 'tempColor' || shuffledDeck[0].cardName === 'tempTaki') {

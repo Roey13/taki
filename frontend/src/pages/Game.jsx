@@ -61,6 +61,8 @@ export function Game() {
         dispatch(setNumberOfPlayers(ev.target.value))
     }
 
+    console.log('shuffledDeck', shuffledDeck);
+    console.log('playingDeck', playingDeck);
 
     return (
         <div className="game-page-container">
@@ -86,11 +88,12 @@ export function Game() {
                 })}
             </div>
 
+
             {playingDeck &&
                 <div className="playing-area">
                     {gameDirection}
                     {deckDraw}
-                    {isOpenTaki.open && <EndTurn/>}
+                    {isOpenTaki.open && !changeColorMode && <EndTurn/>}
                     {plus2Mode && <div>+2MODE!!!</div>}
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'} />
                     <Draw />
