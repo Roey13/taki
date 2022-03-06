@@ -13,6 +13,7 @@ export function PlayersCards({ card, isTurn }) {
 
     const playTurn = (card) => {
         if (isOpenTaki.open) {
+            console.log('isOpenTaki.color', isOpenTaki.color);
             const currPlayersDeck = playersDecks[playersTurn - 1].deck
             let isColorIncluded = 0
             currPlayersDeck.map((card) => {
@@ -20,20 +21,20 @@ export function PlayersCards({ card, isTurn }) {
                     isColorIncluded++
                 }
             })
+            console.log('isColorIncluded', isColorIncluded);
             if (isColorIncluded === 1 && (card.isSpecial)) {
+                console.log('2');
                 dispatch(toggleOpenTaki({ open: false, color: '' }))
                 handlePlayersDeck()
                 handleSpecial()
             }
             else if (isColorIncluded === 1) {
+                console.log('3');
                 handlePlayersDeck()
                 setNextTurn()
                 dispatch(toggleOpenTaki({ open: false, color: '' }))
-            }
-
-            else if (isColorIncluded > 1) {
-                handlePlayersDeck()
-            } else {
+            } else if (isColorIncluded > 1) {
+                console.log('4');
                 handlePlayersDeck()
             }
 
@@ -118,8 +119,8 @@ export function PlayersCards({ card, isTurn }) {
 
     }
 
-    const handleTaki = () => {
-        const currClr = card.cardColor[0]
+    const handleTaki = (currClr = card.cardColor[0]) => {
+        console.log('currClr', currClr);
         const currPlayersDeck = playersDecks[playersTurn - 1].deck
         let isColorIncluded = 0
         currPlayersDeck.map((currCard) => {
@@ -182,13 +183,18 @@ export function PlayersCards({ card, isTurn }) {
     }
 
     const handleSuperTaki = () => {
+        const currClr = playingDeck[1].cardColor[0]
         if (playingDeck[1].cardColor.length === 1) {
-            const currClr = playingDeck[1].cardColor[0]
             dispatch(toggleOpenTaki({ open: true, color: currClr }))
             playingDeck.unshift({
                 cardName: 'tempTaki', cardColor: [currClr], isSpecial: true, shape: 'taki',
             })
-        } else dispatch(toggleColorMode(true))
+            // handleTaki(currClr)
+        } else {
+            dispatch(toggleColorMode(true))
+            dispatch(toggleOpenTaki({ open: true, color: '' }))
+            // handleTaki(currClr)
+        }
     }
 
     if (isTurn && !changeColorMode) {
