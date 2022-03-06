@@ -1,86 +1,63 @@
 .game-page-container {
-   position: relative;
-   height: 100%;
-   width: 100%;
-
-    .players-container {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: repeat(5, 1fr);
-        position: absolute;
-        width: 100%;
-        height: 100%;
-
-        img{
-            height: rem(150px);
-        }
-    }
-
-
-    .player-container-1 {
-        grid-area: 5 / 2 / 6 / 5;
-        display: flex;
-        // max-height: rem(260px);
-
-        img{
-            height: rem(260px);
-            max-height: rem(260px);
-        }
-    }
-    .player-container-2 {
-        grid-area: 2 / 1 / 5 / 2;
-        display: flex;
-        flex-direction: column;
-        max-height: rem(260px);
-
-        div{
-            max-height: rem(98.063px);
-        }
-
-        img{
-            transform: rotate(90deg);
-        }
-    }
-    .player-container-3 {
-        grid-area: 1 / 2 / 2 / 5;
-        display: flex;
-        max-height: rem(260px);
-    }
-    .player-container-4 {
-        grid-area: 2 / 5 / 5 / 6;
-        display: flex;
-        flex-direction: column;
-        max-height: rem(260px);
-
-        div{
-            max-height: rem(98.063px);
-        }
-
-        img{
-            transform: rotate(90deg);
-        }
-    }
-
-    .playing-area {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        img {
-            z-index: 1;
-            height: rem(250px);
-        }
-
-        .color-select{
-            z-index: 1;
-        }
-
-        .end-turn-btn{
-            z-index: 1;
-        }
-    }
-
-
-
-}
+    position: relative;
+    height: 100%;
+    width: 100%;
+ 
+     .players-container {
+         display: grid;
+         grid-template-columns: repeat(5, 1fr);
+         grid-template-rows: repeat(5, 1fr);
+         position: absolute;
+         width: 100%;
+         height: 100%;
+ 
+         img{
+             height: rem(150px);
+         }
+     }
+ 
+ 
+     .player-container-1 {
+         grid-area: 5 / 2 / 6 / 5;
+         display: flex;
+     }
+     .player-container-2 {
+         grid-area: 2 / 1 / 5 / 2;
+         display: flex;
+         flex-direction: column;
+         flex-wrap: wrap;
+     }
+     .player-container-3 {
+         grid-area: 1 / 2 / 2 / 5;
+         display: flex;
+     }
+     .player-container-4 {
+         grid-area: 2 / 5 / 5 / 6;
+         display: flex;
+         flex-direction: column;
+         flex-wrap: wrap;
+     }
+ 
+     .playing-area {
+         height: 100%;
+         width: 100%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         img {
+             z-index: 1;
+             height: rem(250px);
+         }
+ 
+         .color-select{
+             z-index: 1;
+         }
+ 
+         .end-turn-btn{
+             z-index: 1;
+         }
+     }
+ 
+ 
+ 
+ }
