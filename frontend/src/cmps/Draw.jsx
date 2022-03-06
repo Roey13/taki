@@ -85,5 +85,5 @@ export function Draw() {
         }
     }
 
-    return <img src="imgs/stack.svg" alt="" onClick={drawCard} style={{ cursor: 'pointer' }} />
+    return <img className="draw-stack" src="imgs/stack.svg" alt="" onClick={drawCard} style={{ cursor: 'pointer' }} />
 }

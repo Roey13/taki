@@ -20,22 +20,45 @@
     .player-container-1 {
         grid-area: 5 / 2 / 6 / 5;
         display: flex;
+        // max-height: rem(260px);
+
+        img{
+            height: rem(260px);
+            max-height: rem(260px);
+        }
     }
     .player-container-2 {
         grid-area: 2 / 1 / 5 / 2;
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
+        max-height: rem(260px);
+
+        div{
+            max-height: rem(98.063px);
+        }
+
+        img{
+            transform: rotate(90deg);
+        }
     }
     .player-container-3 {
         grid-area: 1 / 2 / 2 / 5;
         display: flex;
+        max-height: rem(260px);
     }
     .player-container-4 {
         grid-area: 2 / 5 / 5 / 6;
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
+        max-height: rem(260px);
+
+        div{
+            max-height: rem(98.063px);
+        }
+
+        img{
+            transform: rotate(90deg);
+        }
     }
 
     .playing-area {
