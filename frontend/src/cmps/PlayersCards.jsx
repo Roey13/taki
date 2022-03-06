@@ -13,7 +13,6 @@ export function PlayersCards({ card, isTurn }) {
 
     const playTurn = (card) => {
         if (isOpenTaki.open) {
-
             const currPlayersDeck = playersDecks[playersTurn - 1].deck
             let isColorIncluded = 0
             currPlayersDeck.map((card) => {
@@ -21,16 +20,21 @@ export function PlayersCards({ card, isTurn }) {
                     isColorIncluded++
                 }
             })
-            if (isColorIncluded === 1){
-                setNextTurn()
+            if (isColorIncluded === 1 && (card.isSpecial)) {
+                dispatch(toggleOpenTaki({ open: false, color: '' }))
+                handlePlayersDeck()
+                handleSpecial()
             }
-            else if (isColorIncluded === 1 && (card.isSpecial)) handleSpecial()
+            else if (isColorIncluded === 1) {
+                handlePlayersDeck()
+                setNextTurn()
+                dispatch(toggleOpenTaki({ open: false, color: '' }))
+            }
+
             else if (isColorIncluded > 1) {
                 handlePlayersDeck()
             } else {
                 handlePlayersDeck()
-                setNextTurn()
-                dispatch(toggleOpenTaki({ open: false, color: '' }))
             }
 
 
@@ -103,20 +107,33 @@ export function PlayersCards({ card, isTurn }) {
 
             if (shape === 'revert') handleRevert()
 
-            if (shape === 'taki' && cardColor.length === 1) {
-                const currClr = card.cardColor[0]
-                dispatch(toggleOpenTaki({ open: true, color: currClr }))
-            }
+            if (shape === 'taki' && cardColor.length === 1) handleTaki()
 
-            if (shape === 'taki' && cardColor.length > 1) {
-                handleSuperTaki()
-            }
+            if (shape === 'taki' && cardColor.length > 1) handleSuperTaki()
 
             if (shape === 'stop') handleStop()
 
             if (shape === '+2') handlePlus2()
         }
 
+    }
+
+    const handleTaki = () => {
+        const currClr = card.cardColor[0]
+        const currPlayersDeck = playersDecks[playersTurn - 1].deck
+        let isColorIncluded = 0
+        currPlayersDeck.map((currCard) => {
+            if (currCard.cardColor.includes(currClr)) {
+                isColorIncluded++
+            }
+        })
+        if (isColorIncluded === 0) {
+            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+            handlePlayersDeck()
+            setNextTurn()
+        } else {
+            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+        }
     }
 
     const handleRevert = () => {
@@ -173,8 +190,6 @@ export function PlayersCards({ card, isTurn }) {
             })
         } else dispatch(toggleColorMode(true))
     }
-
-    console.log('playingDeck', playingDeck);
 
     if (isTurn && !changeColorMode) {
         return <div onClick={() => playTurn(card)} style={{ cursor: 'pointer' }}><GetCardImg card={card} /></div>

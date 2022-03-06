@@ -5,6 +5,7 @@ import { PlayersCards } from '../cmps/PlayersCards'
 import { Draw } from '../cmps/Draw'
 import { GetCardImg } from '../cmps/GetCardImg'
 import { HandleChangeColor } from '../cmps/HandleChangeColor'
+import { EndTurn } from '../cmps/EndTurn.jsx';
 
 export function Game() {
 
@@ -19,7 +20,8 @@ export function Game() {
         gameDirection,
         plus2Mode,
         deckDraw,
-        changeColorMode
+        changeColorMode,
+        isOpenTaki
     } = useSelector(state => state.cardsModule)
 
     const currTurnStyle = { backgroundColor: '#00d0ff' }
@@ -88,6 +90,7 @@ export function Game() {
                 <div className="playing-area">
                     {gameDirection}
                     {deckDraw}
+                    {isOpenTaki.open && <EndTurn/>}
                     {plus2Mode && <div>+2MODE!!!</div>}
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'} />
                     <Draw />

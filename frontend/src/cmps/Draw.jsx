@@ -50,10 +50,8 @@ export function Draw() {
             const tempPlayersDecks = playersDecks
             const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck;
             drawCards.map((card) => {
-                console.log('card', card);
                 currPlayersDeck.push(card)
             })
-            console.log('currPlayersDeck', currPlayersDeck);
             dispatch(getPlayersDecks(tempPlayersDecks))
 
             setNextTurn()
