@@ -63,13 +63,14 @@ export function Game() {
         dispatch(setNumberOfPlayers(ev.target.value))
     }
 
-    playersDecks.forEach((player) =>{
-        if (player.deck.length === 0) dispatch(toggleVictory(true))
+    let isOver = false
+
+    playersDecks.forEach((player) => {
+        if (player.deck.length === 0) isOver = true
     })
 
-    return (
+    if (!isOver) return (
         <div className="game-page-container">
-            {isVictory && <Victory />}
             {!playingDeck &&
                 <div className="game-options-container">
                     <button onClick={startGame}>Start Game</button>
@@ -105,4 +106,5 @@ export function Game() {
 
         </div>
     )
+    else return <Victory />
 }
