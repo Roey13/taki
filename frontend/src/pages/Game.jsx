@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers } from '../store/actions/cardsActions.js'
+import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, toggleVictory } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 import { Draw } from '../cmps/Draw'
 import { GetCardImg } from '../cmps/GetCardImg'
 import { HandleChangeColor } from '../cmps/HandleChangeColor'
 import { EndTurn } from '../cmps/EndTurn.jsx';
+import { Victory } from '../cmps/Victory.jsx';
 
 export function Game() {
 
@@ -21,7 +22,8 @@ export function Game() {
         plus2Mode,
         deckDraw,
         changeColorMode,
-        isOpenTaki
+        isOpenTaki,
+        isVictory
     } = useSelector(state => state.cardsModule)
 
     const currTurnStyle = { backgroundColor: '#00d0ff' }
@@ -61,12 +63,13 @@ export function Game() {
         dispatch(setNumberOfPlayers(ev.target.value))
     }
 
-    console.log('shuffledDeck', shuffledDeck);
-    console.log('playingDeck', playingDeck);
+    playersDecks.forEach((player) =>{
+        if (player.deck.length === 0) dispatch(toggleVictory(true))
+    })
 
     return (
         <div className="game-page-container">
-
+            {isVictory && <Victory />}
             {!playingDeck &&
                 <div className="game-options-container">
                     <button onClick={startGame}>Start Game</button>
@@ -93,7 +96,7 @@ export function Game() {
                 <div className="playing-area">
                     {gameDirection}
                     {deckDraw}
-                    {isOpenTaki.open && !changeColorMode && <EndTurn/>}
+                    {isOpenTaki.open && !changeColorMode && <EndTurn />}
                     {plus2Mode && <div>+2MODE!!!</div>}
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'} />
                     <Draw />

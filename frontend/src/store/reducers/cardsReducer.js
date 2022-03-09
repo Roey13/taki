@@ -9,7 +9,8 @@ const initialState = {
   gameDirection: 'forward',
   plus2Mode: false,
   deckDraw: 0,
-  changeColorMode: false
+  changeColorMode: false,
+  isVictory: false,
 }
 
 export function cardsReducer(state = initialState, action = {}) {
@@ -36,6 +37,8 @@ export function cardsReducer(state = initialState, action = {}) {
       return { ...state, deckDraw: action.num }
     case 'TOGGLE_CHANGE_COLOR_MODE':
       return { ...state, changeColorMode: action.boolean }
+    case 'TOGGLE_VICTORY_MODE':
+      return { ...state, isVictory: action.isVictory }
     default:
       return state
   }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, setPlayersTurn, togglePlus2Mode, setDeckDraw, toggleOpenTaki } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
+import { eventBusService } from '../services/eventBusService.js';
 
 export function EndTurn() {
 
@@ -21,7 +22,8 @@ export function EndTurn() {
 
     const handleEndTurn = () => {
         dispatch(toggleOpenTaki({ open: false, color: '' }))
-        setNextTurn()
+        if (playingDeck[0].isSpecial) eventBusService.emit('endTurn', true)
+        else setNextTurn()
     }
 
     const setNextTurn = () => {

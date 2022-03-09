@@ -88,3 +88,11 @@ export function toggleColorMode(boolean){
     } catch (err) {}
   }
 }
+
+export function toggleVictory(isVictory){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'TOGGLE_VICTORY_MODE', isVictory })
+    } catch (err) {}
+  }
+}

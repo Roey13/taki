@@ -17,8 +17,7 @@ export function HandleChangeColor() {
 
     const createColorCard = () =>{
         if (changeColorMode && !isOpenTaki.open){
-            console.log('isOpenTaki.open', isOpenTaki.open);
-            console.log('regular');
+
             playingDeck.unshift({
                 cardName: 'tempColor', cardColor: [selectedColor], isSpecial: true , shape: 'changeColor',
             })

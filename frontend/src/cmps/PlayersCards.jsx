@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki, toggleGameDirection, togglePlus2Mode, setDeckDraw, toggleColorMode } from '../store/actions/cardsActions.js'
 import { checkIfLegal } from '../helpers/checkIfLegal.js';
-import { handleSpecial } from '../helpers/handleSpecial.js';
 import { GetCardImg } from './GetCardImg';
+import { eventBusService } from '../services/eventBusService.js';
 
 export function PlayersCards({ card, isTurn }) {
 
     const dispatch = useDispatch()
 
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection, plus2Mode, deckDraw, changeColorMode } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection, plus2Mode, deckDraw, changeColorMode, isVictory } = useSelector(state => state.cardsModule)
 
+    
+    useEffect(() => {
+        eventBusService.on('endTurn', handleSpecial)
+    },[])
+        
     const playTurn = (card) => {
         if (isOpenTaki.open) {
-            console.log('isOpenTaki.color', isOpenTaki.color);
             const currPlayersDeck = playersDecks[playersTurn - 1].deck
             let isColorIncluded = 0
             currPlayersDeck.map((card) => {
@@ -21,20 +25,16 @@ export function PlayersCards({ card, isTurn }) {
                     isColorIncluded++
                 }
             })
-            console.log('isColorIncluded', isColorIncluded);
             if (isColorIncluded === 1 && (card.isSpecial)) {
-                console.log('2');
                 dispatch(toggleOpenTaki({ open: false, color: '' }))
                 handlePlayersDeck()
                 handleSpecial()
             }
             else if (isColorIncluded === 1) {
-                console.log('3');
                 handlePlayersDeck()
                 setNextTurn()
                 dispatch(toggleOpenTaki({ open: false, color: '' }))
             } else if (isColorIncluded > 1) {
-                console.log('4');
                 handlePlayersDeck()
             }
 
@@ -96,11 +96,22 @@ export function PlayersCards({ card, isTurn }) {
         }
     }
 
-    const handleSpecial = () => {
+    const handleSpecial = (isEndTurn = false) => {
 
-        if (checkIfLegal(card, playingDeck)) {
+        let shape
+        let cardColor
 
-            const { shape, cardColor } = card
+        if (!isEndTurn){
+            shape = card.shape
+            cardColor = card.cardColor
+        } else {
+            shape = playingDeck[0].shape
+            cardColor = playingDeck[0].cardColor
+        }
+        
+        const isLegal = checkIfLegal(card, playingDeck)
+
+        if (isLegal) {
 
             if (shape === 'changeColor') dispatch(toggleColorMode(true))
 
@@ -120,7 +131,6 @@ export function PlayersCards({ card, isTurn }) {
     }
 
     const handleTaki = (currClr = card.cardColor[0]) => {
-        console.log('currClr', currClr);
         const currPlayersDeck = playersDecks[playersTurn - 1].deck
         let isColorIncluded = 0
         currPlayersDeck.map((currCard) => {
@@ -189,11 +199,9 @@ export function PlayersCards({ card, isTurn }) {
             playingDeck.unshift({
                 cardName: 'tempTaki', cardColor: [currClr], isSpecial: true, shape: 'taki',
             })
-            // handleTaki(currClr)
         } else {
             dispatch(toggleColorMode(true))
             dispatch(toggleOpenTaki({ open: true, color: '' }))
-            // handleTaki(currClr)
         }
     }
 
