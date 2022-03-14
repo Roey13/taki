@@ -22,7 +22,8 @@ export function EndTurn() {
 
     const handleEndTurn = () => {
         dispatch(toggleOpenTaki({ open: false, color: '' }))
-        if (playingDeck[0].isSpecial) eventBusService.emit('endTurn', true)
+        if (playingDeck[0].isSpecial && playingDeck[0].shape !== 'taki') eventBusService.emit('endTurn', true)
+        if (playingDeck[0].shape === 'taki') return
         else setNextTurn()
     }
 

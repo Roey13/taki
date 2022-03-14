@@ -1,11 +1,11 @@
-export function GetCardImg({card}) {
+export function GetCardImg({ card }) {
 
     let tempName = card.cardName;
-    if (card.cardName === 'tempColor'){
+    if (card.cardName === 'tempColor') {
         tempName = 'changeColor' + card.cardColor[0];
     } else if (card.cardName === 'tempTaki') {
         tempName = 'taki' + card.cardColor[0];
-    }else{
+    } else {
         tempName = tempName.split(' ').join('');
         tempName = tempName.slice(0, -1)
     }
@@ -15,5 +15,4 @@ export function GetCardImg({card}) {
     )
 
 }
-
 
