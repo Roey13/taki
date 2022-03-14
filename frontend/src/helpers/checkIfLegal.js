@@ -1,4 +1,4 @@
-export function checkIfLegal(card, playingDeck) {
+export function checkIfLegal(card, playingDeck, isOpenTaki) {
 
     const currPLayingCard = playingDeck[0]
 
@@ -10,9 +10,8 @@ export function checkIfLegal(card, playingDeck) {
 
     let isLegal = false
 
-    if (playingCardShape === playersCardShape){
+    if (playingCardShape === playersCardShape && !isOpenTaki.open) {
         isLegal = true
-        return isLegal
     } else {
         if (playingCardColors.length > playersCardColors.length) {
             playingCardColors.forEach((color) => {
@@ -34,3 +33,6 @@ export function checkIfLegal(card, playingDeck) {
     return isLegal
 
 }
+
+// if (isOpenTaki.open && playersCardColors[0] !== isOpenTaki.color) {
+//     isLegal = false

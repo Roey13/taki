@@ -45,7 +45,7 @@ export function PlayersCards({ card, isTurn }) {
             handlePlayersDeck()
             if (card.isSpecial) handleSpecial()
             else {
-                if (checkIfLegal(card, playingDeck)) setNextTurn()
+                if (checkIfLegal(card, playingDeck, isOpenTaki)) setNextTurn()
             }
         }
     }
@@ -81,7 +81,7 @@ export function PlayersCards({ card, isTurn }) {
     }
 
     const handlePlayersDeck = () => {
-        if (checkIfLegal(card, playingDeck)) {
+        if (checkIfLegal(card, playingDeck, isOpenTaki)) {
             playingDeck.unshift(card)
             dispatch(getPlayingDeck(playingDeck))
 
@@ -109,7 +109,7 @@ export function PlayersCards({ card, isTurn }) {
             cardColor = playingDeck[0].cardColor
         }
         
-        const isLegal = checkIfLegal(card, playingDeck)
+        const isLegal = checkIfLegal(card, playingDeck, isOpenTaki)
 
         if (isLegal) {
 
