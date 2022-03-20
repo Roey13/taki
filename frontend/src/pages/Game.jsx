@@ -69,9 +69,6 @@ export function Game() {
         if (player.deck.length === 0) isOver = true
     })
 
-    console.log('shuffledDeck', shuffledDeck);
-    console.log('playingDeck', playingDeck);
-
     if (!isOver) return (
         <div className="game-page-container">
             {!playingDeck &&

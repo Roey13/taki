@@ -49,10 +49,6 @@ export function PlayersCards() {
         } else return
     }
 
-    const checkIfTurn = () => {
-
-    }
-
     const handlePlus2Mode = (card) => {
         if (card.shape === 'king') {
             dispatch(togglePlus2Mode(false))
@@ -99,21 +95,22 @@ export function PlayersCards() {
         }
     }
 
-    const handleSpecial = (isEndTurn = false, card) => {
+    const handleSpecial = (isEndTurn = isOpenTaki.open, card) => {
         eventBusService.on('endTurn', handleSpecial)
 
         let shape
         let cardColor
+        let isLegal
 
         if (!isEndTurn) {
             shape = card.shape
             cardColor = card.cardColor
+            isLegal = checkIfLegal(card, playingDeck, isOpenTaki)
         } else {
             shape = playingDeck[0].shape
             cardColor = playingDeck[0].cardColor
+            isLegal = true
         }
-
-        const isLegal = checkIfLegal(card, playingDeck, isOpenTaki)
 
         if (isLegal) {
 
