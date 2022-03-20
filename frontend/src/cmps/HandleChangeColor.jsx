@@ -16,6 +16,7 @@ export function HandleChangeColor() {
     }
 
     const createColorCard = () =>{
+        if (selectedColor === '') return
         if (changeColorMode && !isOpenTaki.open){
 
             playingDeck.unshift({

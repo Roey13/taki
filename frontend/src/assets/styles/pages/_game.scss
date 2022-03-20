@@ -20,22 +20,26 @@
      .player-container-1 {
          grid-area: 5 / 2 / 6 / 5;
          display: flex;
+         z-index: 1;
      }
      .player-container-2 {
          grid-area: 2 / 1 / 5 / 2;
          display: flex;
          flex-direction: column;
          flex-wrap: wrap;
+         z-index: 1;
      }
      .player-container-3 {
          grid-area: 1 / 2 / 2 / 5;
          display: flex;
+         z-index: 1;
      }
      .player-container-4 {
          grid-area: 2 / 5 / 5 / 6;
          display: flex;
          flex-direction: column;
          flex-wrap: wrap;
+         z-index: 1;
      }
  
      .playing-area {
@@ -50,10 +54,6 @@
          }
  
          .color-select{
-             z-index: 1;
-         }
- 
-         .end-turn-btn{
              z-index: 1;
          }
      }

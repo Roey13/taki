@@ -4,8 +4,7 @@ import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumbe
 import { PlayersCards } from '../cmps/PlayersCards'
 import { eventBusService } from '../services/eventBusService.js';
 
-export function EndTurn() {
-
+export function EndTurn({ card }) {
     const dispatch = useDispatch()
     const {
         cardDeck,
@@ -22,8 +21,8 @@ export function EndTurn() {
 
     const handleEndTurn = () => {
         dispatch(toggleOpenTaki({ open: false, color: '' }))
-        if (playingDeck[0].isSpecial && playingDeck[0].shape !== 'taki') eventBusService.emit('endTurn', true)
-        if (playingDeck[0].shape === 'taki') return
+        if (card.isSpecial && card.shape !== 'taki') eventBusService.emit('endTurn', true)
+        if (card.shape === 'taki') return
         else setNextTurn()
     }
 
@@ -43,5 +42,7 @@ export function EndTurn() {
         }
     }
 
-    return  <button onClick={handleEndTurn} className="end-turn-btn">End Turn</button>
+    return <div className="end-turn-container">
+        <button onClick={handleEndTurn} className="end-turn-btn">End Turn</button>
+    </div>
 }

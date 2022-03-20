@@ -69,6 +69,9 @@ export function Game() {
         if (player.deck.length === 0) isOver = true
     })
 
+    console.log('shuffledDeck', shuffledDeck);
+    console.log('playingDeck', playingDeck);
+
     if (!isOver) return (
         <div className="game-page-container">
             {!playingDeck &&
@@ -77,8 +80,9 @@ export function Game() {
                     <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
                 </div>}
 
-            <div className="players-container">
-                {playersDecks.map((deck, i) => {
+            {/* <div className="players-container"> */}
+                <PlayersCards />
+                {/* {playersDecks.map((deck, i) => {
                     let style = {}
                     if (deck.playerNo === playersTurn) style = currTurnStyle
                     return <div className={`player-container-${deck.playerNo}`} key={i}>
@@ -90,14 +94,13 @@ export function Game() {
                         })}
                     </div>
                 })}
-            </div>
+            </div> */}
 
 
             {playingDeck &&
                 <div className="playing-area">
                     {gameDirection}
                     {deckDraw}
-                    {isOpenTaki.open && !changeColorMode && <EndTurn />}
                     {plus2Mode && <div>+2MODE!!!</div>}
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'} />
                     <Draw />

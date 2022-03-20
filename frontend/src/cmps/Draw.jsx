@@ -23,7 +23,8 @@ export function Draw() {
         if (shuffledDeck.length === 2){
             const playingDeckNotFirst = playingDeck.splice (1, playingDeck.length)
             shuffledDeck.push(...playingDeckNotFirst)
-            dispatch(getShuffledDeck(shuffledDeck))
+            const shuffled = shuffledDeck.sort((a, b) => 0.5 - Math.random())
+            dispatch(getShuffledDeck(shuffled))
             dispatch(getPlayingDeck(playingDeck))
         }
         

@@ -10,7 +10,7 @@ const initialState = {
   plus2Mode: false,
   deckDraw: 0,
   changeColorMode: false,
-  isVictory: false,
+  isVictory: false
 }
 
 export function cardsReducer(state = initialState, action = {}) {
