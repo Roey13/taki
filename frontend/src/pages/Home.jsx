@@ -25,7 +25,7 @@ export function Home() {
         <div className="home-container">
             <button onClick={createLink}>Create Game</button>
             <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
-            {isReady && <Link to={{pathname: `/room/${roomId}`, state: {roomId: roomId, numberOfPlayers: numberOfPlayers}}}>Enter Game</Link>}
+            {isReady && <Link to={{pathname: `/room/${roomId}/players/${numberOfPlayers}`, state: {roomId: roomId, numberOfPlayers: numberOfPlayers}}}>Enter Game</Link>}
         </div>
     )
 }

@@ -6,7 +6,7 @@ export const routes = [{
     component: Home,
 },
 {
-    path: '/room/:roomId?',
+    path: '/room/:roomId?/players/:numberOfPlayers?',
     component: Game
 }
 ]
