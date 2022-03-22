@@ -1,108 +1,99 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, toggleVictory } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 import { Draw } from '../cmps/Draw'
 import { GetCardImg } from '../cmps/GetCardImg'
 import { HandleChangeColor } from '../cmps/HandleChangeColor'
 import { EndTurn } from '../cmps/EndTurn.jsx';
 import { Victory } from '../cmps/Victory.jsx';
+import { v4 as uuidv4 } from 'uuid';
+import { cardDeck } from '../services/cardDeckService.js'
+import { useLocation } from 'react-router-dom'
 
 export function Game() {
 
-    const dispatch = useDispatch()
-    const {
-        cardDeck,
-        shuffledDeck,
-        playersDecks,
-        playingDeck,
-        playersTurn,
-        numberOfPlayers,
-        gameDirection,
-        plus2Mode,
-        deckDraw,
-        changeColorMode,
-        isOpenTaki,
-        isVictory
-    } = useSelector(state => state.cardsModule)
+    const location = useLocation()
 
-    const currTurnStyle = { backgroundColor: '#00d0ff' }
-
-    useEffect(() => {
-        dispatch(getCardDeck())
-    }, [dispatch])
+    const [game, setGame] = useState({
+        roomId: null,
+        initDeck: null,
+        playersDecks: [],
+        playingDeck: null,
+        playersTurn: 1,
+        numberOfPlayers: null,
+        isOpenTaki: { open: false, color: '' },
+        gameDirection: 'forward',
+        plus2Mode: false,
+        deckDraw: 0,
+        changeColorMode: false,
+        isVictory: false
+    })
 
     useEffect(() => {
-        if (cardDeck) {
-            const shuffled = cardDeck.sort((a, b) => 0.5 - Math.random())
-            dispatch(getShuffledDeck(shuffled))
-        }
-    }, [cardDeck, dispatch])
+        startGame()
+    }, [])
+
+    const updateGame = (entity) => {
+        setGame(prevGame => ({
+            ...prevGame,
+            ...entity
+        }))
+    }
 
     const startGame = () => {
-        const playerDeck = shuffledDeck.splice(0, 8 * numberOfPlayers)
+        const shuffledDeck = cardDeck.sort((a, b) => 0.5 - Math.random())
+        const { roomId, numberOfPlayers } = location.state
+        const tempPlayersDeck = shuffledDeck.splice(0, 8 * numberOfPlayers)
         const allDecks = []
-        const players = []
+        const playersDecks = []
 
-        for (let i = 0; i < playerDeck.length; i += 8) {
-            const chunk = playerDeck.slice(i, i + 8);
+        for (let i = 0; i < tempPlayersDeck.length; i += 8) {
+            const chunk = tempPlayersDeck.slice(i, i + 8);
             allDecks.push(chunk);
         }
 
         for (let i = 0; i < allDecks.length; i++) {
-            players.push({ playerNo: i + 1, deck: allDecks[i] })
+            playersDecks.push({ playerNo: i + 1, deck: allDecks[i] })
         }
 
+        const playingDeck = shuffledDeck.splice(0, 1)
 
-        dispatch(getPlayersDecks(players))
-        const newPlayingDeck = shuffledDeck.splice(0, 1)
-        dispatch(getPlayingDeck(newPlayingDeck))
+        const entity = {
+            numberOfPlayers: numberOfPlayers,
+            roomId: roomId,
+            playersDecks: playersDecks,
+            playingDeck: playingDeck,
+            initDeck: shuffledDeck
+        }
+
+        updateGame(entity)
     }
 
-    const updateNumberOfPlayers = (ev) => {
-        dispatch(setNumberOfPlayers(ev.target.value))
-    }
-
-    let isOver = false
-
-    playersDecks.forEach((player) => {
-        if (player.deck.length === 0) isOver = true
+    game.playersDecks.forEach((player) => {
+        if (player.deck.length === 0) {
+            const entity = {isVictory: true}
+            updateGame(entity)
+        }
     })
 
-    if (!isOver) return (
+    const { isVictory, playingDeck, gameDirection, deckDraw, plus2Mode, changeColorMode } = game
+
+    if (!isVictory) return (
         <div className="game-page-container">
-            {!playingDeck &&
-                <div className="game-options-container">
-                    <button onClick={startGame}>Start Game</button>
-                    <input type="number" value={numberOfPlayers} min="2" max="4" onChange={updateNumberOfPlayers}></input>
-                </div>}
 
-            {/* <div className="players-container"> */}
-                <PlayersCards />
-                {/* {playersDecks.map((deck, i) => {
-                    let style = {}
-                    if (deck.playerNo === playersTurn) style = currTurnStyle
-                    return <div className={`player-container-${deck.playerNo}`} key={i}>
-                        <div style={style}>Player No. {deck.playerNo}</div>
-                        {deck.deck.map((card) => {
-                            return (
-                                <PlayersCards card={card} isTurn={deck.playerNo === playersTurn} key={card.cardName} />
-                            )
-                        })}
-                    </div>
-                })}
-            </div> */}
+            <PlayersCards game={game} updateGame={updateGame} />
 
-
-            {playingDeck &&
+            {
+                playingDeck &&
                 <div className="playing-area">
                     {gameDirection}
                     {deckDraw}
                     {plus2Mode && <div>+2MODE!!!</div>}
                     <GetCardImg card={playingDeck[0]} className={'playing-deck'} />
-                    <Draw />
-                    {changeColorMode && <HandleChangeColor />}
-                </div>}
+                    <Draw game={game} updateGame={updateGame}/>
+                    {changeColorMode && <HandleChangeColor game={game} updateGame={updateGame}/>}
+                </div>
+            }
 
         </div>
     )

@@ -33,10 +33,6 @@ const itemRoutes = require('./api/items/items.routes')
 
 app.use('/api/item', itemRoutes)
 
-const { connectSockets } = require('./services/socket.service')
-
-
-
 app.get('/api/setup-session', (req, res) => {
     req.session.connectedAt = Date.now()
     console.log('setup-session:', req.sessionID);

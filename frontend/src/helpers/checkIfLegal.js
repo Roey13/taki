@@ -9,16 +9,13 @@ export function checkIfLegal(card, playingDeck, isOpenTaki) {
     const playersCardShape = card.shape
 
     let isLegal = false
-    console.log('isLegal', isLegal);
     if (playingCardShape === playersCardShape && !isOpenTaki.open) {
         isLegal = true
-        console.log('isLegal', isLegal);
     } else {
         if (playingCardColors.length > playersCardColors.length) {
             playingCardColors.forEach((color) => {
                 if (playersCardColors.includes(color)) {
                     isLegal = true
-                    console.log('isLegal', isLegal);
                     return
                 }
             })
@@ -26,14 +23,11 @@ export function checkIfLegal(card, playingDeck, isOpenTaki) {
             playersCardColors.forEach((color) => {
                 if (playingCardColors.includes(color)) {
                     isLegal = true
-                    console.log('isLegal', isLegal);
                     return
                 }
             })
         }
     }
-
-    console.log('isLegal', isLegal);
 
     return isLegal
 

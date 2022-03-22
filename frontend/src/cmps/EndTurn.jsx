@@ -1,11 +1,11 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, setPlayersTurn, togglePlus2Mode, setDeckDraw, toggleOpenTaki } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 import { eventBusService } from '../services/eventBusService.js';
 
-export function EndTurn({ card }) {
-    const dispatch = useDispatch()
+export function EndTurn({ game, updateGame }) {
     const {
         cardDeck,
         shuffledDeck,
@@ -17,29 +17,38 @@ export function EndTurn({ card }) {
         deckDraw,
         plus2Mode,
         changeColorMode
-    } = useSelector(state => state.cardsModule)
+    } = game
+
+    const card = playingDeck[0]
 
     const handleEndTurn = () => {
-        dispatch(toggleOpenTaki({ open: false, color: '' }))
+        const entity = {isOpenTaki: { open: false, color: '' }}
         if (card.isSpecial && card.shape !== 'taki') eventBusService.emit('endTurn', true)
         if (card.shape === 'taki') return
         else setNextTurn()
     }
 
     const setNextTurn = () => {
+
+        let  entity
+
         if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
-                dispatch(setPlayersTurn(1))
+                entity = {playersTurn: 1}
             } else {
-                dispatch(setPlayersTurn(playersTurn + 1))
+                entity = {playersTurn: playersTurn + 1}
             }
         } else {
             if (playersTurn === 1) {
-                dispatch(setPlayersTurn(+numberOfPlayers))
+                entity = {playersTurn: +numberOfPlayers}
             } else {
-                dispatch(setPlayersTurn(playersTurn - 1))
+                entity = {playersTurn: playersTurn - 1}
             }
         }
+
+        updateGame(entity)
+
+
     }
 
     return <div className="end-turn-container">

@@ -1,12 +1,11 @@
+/* eslint-disable */
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleColorMode, toggleOpenTaki } from '../store/actions/cardsActions.js'
 
-export function HandleChangeColor() {
+export function HandleChangeColor({game, updateGame}) {
 
-    const dispatch = useDispatch()
-
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, gameDirection, changeColorMode, isOpenTaki } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, gameDirection, changeColorMode, isOpenTaki } = game
 
     const [selectedColor, setSelectedColor] = useState('')
 
@@ -16,40 +15,52 @@ export function HandleChangeColor() {
     }
 
     const createColorCard = () =>{
+        let entity
         if (selectedColor === '') return
         if (changeColorMode && !isOpenTaki.open){
 
             playingDeck.unshift({
                 cardName: 'tempColor', cardColor: [selectedColor], isSpecial: true , shape: 'changeColor',
             })
-            dispatch(getPlayingDeck(playingDeck))
-            dispatch(toggleColorMode(false))
+
+            entity = {playingDeck: playingDeck, changeColorMode: false}
+            updateGame(entity)
             setNextTurn()
         } else if (changeColorMode && isOpenTaki.open){
             playingDeck.unshift({
                 cardName: 'tempTaki', cardColor: [selectedColor], isSpecial: true, shape: 'taki',
             })
-            dispatch(toggleOpenTaki({ open: true, color: selectedColor }))
-            dispatch(getPlayingDeck(playingDeck))
-            dispatch(toggleColorMode(false))
+            entity = {
+                isOpenTaki: { open: true, color: selectedColor },
+                playingDeck: playingDeck,
+                changeColorMode: false
+            }
+            updateGame(entity)
         }
 
     }
 
     const setNextTurn = () => {
-        if (gameDirection === 'forward'){
+
+        let  entity
+
+        if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
-                dispatch(setPlayersTurn(1))
+                entity = {playersTurn: 1}
             } else {
-                dispatch(setPlayersTurn(playersTurn + 1))
+                entity = {playersTurn: playersTurn + 1}
             }
         } else {
             if (playersTurn === 1) {
-                dispatch(setPlayersTurn(+numberOfPlayers))
+                entity = {playersTurn: +numberOfPlayers}
             } else {
-                dispatch(setPlayersTurn(playersTurn - 1))
+                entity = {playersTurn: playersTurn - 1}
             }
         }
+
+        updateGame(entity)
+
+
     }
 
 

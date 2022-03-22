@@ -1,13 +1,13 @@
-import { cardDeckService } from '../../services/cardDeckService'
+// import { cardDeckService } from '../../services/cardDeckService'
 
-export function getCardDeck(){
-  return async dispatch => {
-    try {
-      const cardDeck = cardDeckService.cardDeck()
-      dispatch({ type: 'GET_CARD_DECK', cardDeck })
-    } catch (err) {}
-  }
-}
+// export function getCardDeck(){
+//   return async dispatch => {
+//     try {
+//       const cardDeck = cardDeckService.cardDeck()
+//       dispatch({ type: 'GET_CARD_DECK', cardDeck })
+//     } catch (err) {}
+//   }
+// }
 
 export function getShuffledDeck(shuffled){
   return async dispatch => {

@@ -1,18 +1,19 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleOpenTaki, toggleGameDirection, togglePlus2Mode, setDeckDraw, toggleColorMode, toggleVictory } from '../store/actions/cardsActions.js'
 import { checkIfLegal } from '../helpers/checkIfLegal.js';
 import { GetCardImg } from './GetCardImg';
 import { eventBusService } from '../services/eventBusService.js';
 import { EndTurn } from './EndTurn.jsx';
 
-export function PlayersCards() {
+export function PlayersCards({game, updateGame}) {
 
-    const dispatch = useDispatch()
-
-    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection, plus2Mode, deckDraw, changeColorMode, isVictory } = useSelector(state => state.cardsModule)
+    const { playingDeck, playersDecks, playersTurn, numberOfPlayers, isOpenTaki, gameDirection, plus2Mode, deckDraw, changeColorMode, isVictory } = game
 
     const playTurn = (card, playersNum) => {
+
+        let entity
 
         if (playersNum === playersTurn) {
             if (isOpenTaki.open) {
@@ -24,14 +25,16 @@ export function PlayersCards() {
                     }
                 })
                 if (isColorIncluded === 1 && (card.isSpecial)) {
-                    dispatch(toggleOpenTaki({ open: false, color: '' }))
+                    entity = {isOpenTaki: { open: false, color: '' }}
+                    updateGame(entity)
                     handlePlayersDeck(card)
                     handleSpecial(false, card)
                 }
                 else if (isColorIncluded === 1) {
                     handlePlayersDeck(card)
                     setNextTurn()
-                    dispatch(toggleOpenTaki({ open: false, color: '' }))
+                    entity = {isOpenTaki: { open: false, color: '' }}
+                    updateGame(entity)
                 } else if (isColorIncluded > 1) {
                     handlePlayersDeck(card)
                 }
@@ -50,13 +53,17 @@ export function PlayersCards() {
     }
 
     const handlePlus2Mode = (card) => {
+
+        let entity
+
         if (card.shape === 'king') {
-            dispatch(togglePlus2Mode(false))
-            dispatch(setDeckDraw(0))
+            entity = {plus2Mode: false, deckDraw: 0}
+            updateGame(entity)
             handlePlayersDeck(card)
         } else {
             handlePlayersDeck(card)
-            dispatch(setDeckDraw(deckDraw + 2))
+            entity = {deckDraw: deckDraw + 2}
+            updateGame(entity)
             setNextTurn()
         }
 
@@ -64,25 +71,35 @@ export function PlayersCards() {
 
 
     const setNextTurn = () => {
+
+        let entity
+
         if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
-                dispatch(setPlayersTurn(1))
+                entity = {playersTurn: 1}
             } else {
-                dispatch(setPlayersTurn(playersTurn + 1))
+                entity = {playersTurn: playersTurn + 1}
             }
         } else {
             if (playersTurn === 1) {
-                dispatch(setPlayersTurn(+numberOfPlayers))
+                entity = {playersTurn: +numberOfPlayers}
             } else {
-                dispatch(setPlayersTurn(playersTurn - 1))
+                entity = {playersTurn: playersTurn - 1}
             }
         }
+
+        updateGame(entity)
+
     }
 
     const handlePlayersDeck = (card) => {
+
+
         if (checkIfLegal(card, playingDeck, isOpenTaki)) {
             playingDeck.unshift(card)
-            dispatch(getPlayingDeck(playingDeck))
+
+            const entity = {playingDeck: playingDeck}
+            updateGame(entity)
 
             const currPlayersDeck = playersDecks[playersTurn - 1].deck
 
@@ -114,7 +131,10 @@ export function PlayersCards() {
 
         if (isLegal) {
 
-            if (shape === 'changeColor') dispatch(toggleColorMode(true))
+            if (shape === 'changeColor') {
+                const entity = {changeColorMode: true}
+                updateGame(entity)
+            }
 
             if (shape === 'plus' || shape === 'king') return
 
@@ -132,6 +152,9 @@ export function PlayersCards() {
     }
 
     const handleTaki = (card) => {
+
+        let entity
+
         const currClr = card.cardColor[0]
         const currPlayersDeck = playersDecks[playersTurn - 1].deck
         let isColorIncluded = 0
@@ -141,70 +164,89 @@ export function PlayersCards() {
             }
         })
         if (isColorIncluded === 0) {
-            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+            entity = {isOpenTaki: { open: true, color: currClr }}
+            updateGame(entity)
             handlePlayersDeck(card)
             setNextTurn()
         } else {
-            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+            entity = {isOpenTaki: { open: true, color: currClr }}
+            updateGame(entity)
         }
     }
 
     const handleRevert = () => {
+
+        let entity
+
         if (gameDirection === 'forward') {
-            dispatch(toggleGameDirection('backwards'))
+            entity = {gameDirection: 'backwards'}
+            updateGame(entity)
             if (playersTurn === 1) {
-                dispatch(setPlayersTurn(+numberOfPlayers))
+                entity = {playersTurn: +numberOfPlayers}
+                updateGame(entity)
             } else {
-                dispatch(setPlayersTurn(playersTurn - 1))
+                entity = {playersTurn: playersTurn - 1}
+                updateGame(entity)
             }
         } else {
-            dispatch(toggleGameDirection('forward'))
+            entity = {gameDirection: 'forward'}
+            updateGame(entity)
             if (playersTurn == numberOfPlayers) {
-                dispatch(setPlayersTurn(1))
+                entity = {playersTurn: 1}
+                updateGame(entity)
             } else {
-                dispatch(setPlayersTurn(playersTurn + 1))
+                entity = {playersTurn: playersTurn + 1}
+                updateGame(entity)
             }
         }
     }
 
     const handleStop = () => {
+
+        let entity
+
         let playersAmount = +numberOfPlayers
         if (gameDirection === 'forward') {
             if (playersTurn === playersAmount) {
-                dispatch(setPlayersTurn(2))
+                entity = {playersTurn: 2}
             } else if (playersTurn === playersAmount - 1) {
-                dispatch(setPlayersTurn(1))
+                entity = {playersTurn: 1}
             } else {
-                dispatch(setPlayersTurn(playersTurn + 2))
+                entity = {playersTurn: playersTurn + 2}
             }
         } else {
             if (playersTurn === 1) {
-                dispatch(setPlayersTurn(playersAmount - 1))
+                entity = {playersTurn: playersAmount - 1}
             } else if (playersTurn === 2) {
-                dispatch(setPlayersTurn(playersAmount))
+                entity = {playersTurn: playersAmount}
             } else {
-                dispatch(setPlayersTurn(playersTurn - 2))
+                entity = {playersTurn: playersTurn - 2}
             }
         }
+        updateGame(entity)
     }
 
     const handlePlus2 = () => {
-        dispatch(setDeckDraw(deckDraw + 2))
-        dispatch(togglePlus2Mode(true))
+        const entity = {deckDraw: deckDraw +2, plus2Mode: true}
+        updateGame(entity)
         setNextTurn()
     }
 
     const handleSuperTaki = () => {
+        let entity
         const currClr = playingDeck[1].cardColor[0]
         if (playingDeck[1].cardColor.length === 1) {
-            dispatch(toggleOpenTaki({ open: true, color: currClr }))
+            entity = {isOpenTaki: { open: true, color: currClr }}
             playingDeck.unshift({
                 cardName: 'tempTaki', cardColor: [currClr], isSpecial: true, shape: 'taki',
             })
         } else {
-            dispatch(toggleColorMode(true))
-            dispatch(toggleOpenTaki({ open: true, color: '' }))
+            entity = {
+                changeColorMode: true,
+                isOpenTaki: { open: true, color: '' }
+            }
         }
+        updateGame(entity)
     }
 
     const currTurnStyle = { backgroundColor: '#00d0ff' }
@@ -222,7 +264,7 @@ export function PlayersCards() {
                     })}
                 </div>
             })}
-            {isOpenTaki.open && !changeColorMode && <EndTurn card={playingDeck[0]}/>}
+            {isOpenTaki.open && !changeColorMode && <EndTurn game={game} updateGame={updateGame}/>}
         </div>
     )
 

@@ -1,14 +1,14 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setNumberOfPlayers, setPlayersTurn, togglePlus2Mode, setDeckDraw } from '../store/actions/cardsActions.js'
 import { PlayersCards } from '../cmps/PlayersCards'
 
-export function Draw() {
+export function Draw({game, updateGame}) {
 
-    const dispatch = useDispatch()
     const {
         cardDeck,
-        shuffledDeck,
+        initDeck,
         playersDecks,
         playingDeck,
         playersTurn,
@@ -17,30 +17,34 @@ export function Draw() {
         deckDraw,
         plus2Mode,
         changeColorMode
-    } = useSelector(state => state.cardsModule)
+    } = game
 
     const drawCard = () => {
-        if (shuffledDeck.length === 2){
+
+        let entity
+
+        if (initDeck.length === 2){
             const playingDeckNotFirst = playingDeck.splice (1, playingDeck.length)
-            shuffledDeck.push(...playingDeckNotFirst)
-            const shuffled = shuffledDeck.sort((a, b) => 0.5 - Math.random())
-            dispatch(getShuffledDeck(shuffled))
-            dispatch(getPlayingDeck(playingDeck))
+            initDeck.push(...playingDeckNotFirst)
+            const shuffled = initDeck.sort((a, b) => 0.5 - Math.random())
+            entity = {initDeck: shuffled, playingDeck: playingDeck}
+            updateGame(entity)
         }
         
-        if (shuffledDeck.length === 0) return
+        if (initDeck.length === 0) return
 
         if (!changeColorMode) {
             if (!plus2Mode) {
-                if (shuffledDeck[0].cardName === 'tempColor' || shuffledDeck[0].cardName === 'tempTaki') {
-                    shuffledDeck.splice(0, 1)
+                if (initDeck[0].cardName === 'tempColor' || initDeck[0].cardName === 'tempTaki') {
+                    initDeck.splice(0, 1)
                 }
 
-                const drawOne = shuffledDeck.splice(0, 1)
+                const drawOne = initDeck.splice(0, 1)
                 const tempPlayersDecks = playersDecks
                 const currPlayersDeck = tempPlayersDecks[playersTurn - 1].deck;
                 currPlayersDeck.push(drawOne[0])
-                dispatch(getPlayersDecks(tempPlayersDecks))
+                entity = {playersDecks: tempPlayersDecks}
+                updateGame(entity)
                 setNextTurn()
             } else {
                 drawPlus2()
@@ -49,7 +53,8 @@ export function Draw() {
     }
 
     const drawPlus2 = () => {
-        let drawCards = shuffledDeck.splice(0, +deckDraw)
+        let entity
+        let drawCards = initDeck.splice(0, +deckDraw)
         drawCards.map((card, i) => {
             if (card.cardName === 'tempColor' || card.cardName === 'tempTaki') {
                 drawCards.splice(i, 1)
@@ -62,28 +67,36 @@ export function Draw() {
             drawCards.map((card) => {
                 currPlayersDeck.push(card)
             })
-            dispatch(getPlayersDecks(tempPlayersDecks))
+            entity = {playersDecks: tempPlayersDecks}
+            updateGame(entity)
 
             setNextTurn()
         }
-        dispatch(togglePlus2Mode(false))
-        dispatch(setDeckDraw(0))
+        entity = {plus2Mode: false, deckDraw: 0}
+        updateGame(entity)
     }
 
     const setNextTurn = () => {
+
+        let  entity
+
         if (gameDirection === 'forward') {
             if (playersTurn == numberOfPlayers) {
-                dispatch(setPlayersTurn(1))
+                entity = {playersTurn: 1}
             } else {
-                dispatch(setPlayersTurn(playersTurn + 1))
+                entity = {playersTurn: playersTurn + 1}
             }
         } else {
             if (playersTurn === 1) {
-                dispatch(setPlayersTurn(+numberOfPlayers))
+                entity = {playersTurn: +numberOfPlayers}
             } else {
-                dispatch(setPlayersTurn(playersTurn - 1))
+                entity = {playersTurn: playersTurn - 1}
             }
         }
+
+        updateGame(entity)
+
+
     }
 
     return <img className="draw-stack" src="imgs/stack.svg" alt="" onClick={drawCard} style={{ cursor: 'pointer' }} />
