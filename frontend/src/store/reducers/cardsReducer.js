@@ -4,7 +4,7 @@ const initialState = {
   playersDecks: [],
   playingDeck: null,
   playersTurn: 1,
-  numberOfPlayers: 4,
+  numberOfPlayers: null,
   isOpenTaki: { open: false, color: '' },
   gameDirection: 'forward',
   plus2Mode: false,

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import { PlayersCards } from '../cmps/PlayersCards'
 import { Draw } from '../cmps/Draw'
 import { GetCardImg } from '../cmps/GetCardImg'
@@ -8,11 +9,13 @@ import { EndTurn } from '../cmps/EndTurn.jsx';
 import { Victory } from '../cmps/Victory.jsx';
 import { v4 as uuidv4 } from 'uuid';
 import { cardDeck } from '../services/cardDeckService.js'
+import { socketService } from '../services/socket.service.js';
 import { useParams } from 'react-router-dom'
 
 export function Game() {
 
     const params = useParams()
+    const { numberOfPlayers } = useSelector(state => state.cardsModule)
 
     const [game, setGame] = useState({
         roomId: null,
@@ -30,8 +33,10 @@ export function Game() {
     })
 
     useEffect(() => {
-        console.log('game.roomId', game.roomId);
-        if (!game.roomId) startGame()
+       startGame()
+       socketService.setup()
+       socketService.emit('join game', game.roomId)
+       socketService.on('updated game', (game))
     }, [])
 
     const updateGame = (entity) => {
@@ -43,7 +48,7 @@ export function Game() {
 
     const startGame = () => {
         const shuffledDeck = cardDeck.sort((a, b) => 0.5 - Math.random())
-        const { roomId, numberOfPlayers } = params
+        const { roomId } = params
         const tempPlayersDeck = shuffledDeck.splice(0, 8 * numberOfPlayers)
         const allDecks = []
         const playersDecks = []
