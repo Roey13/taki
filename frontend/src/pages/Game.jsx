@@ -15,10 +15,10 @@ import { useParams } from 'react-router-dom'
 export function Game() {
 
     const params = useParams()
-    const { numberOfPlayers } = useSelector(state => state.cardsModule)
+    const { numberOfPlayers, currRoomId } = useSelector(state => state.cardsModule)
 
     const [game, setGame] = useState({
-        roomId: null,
+        roomId: currRoomId,
         initDeck: null,
         playersDecks: [],
         playingDeck: null,
@@ -33,11 +33,16 @@ export function Game() {
     })
 
     useEffect(() => {
+    const { roomId } = params
        startGame()
        socketService.setup()
-       socketService.emit('join game', game.roomId)
-       socketService.on('updated game', (game))
+       socketService.emit('join game', roomId)
+       socketService.on('updated game', updateGame)
     }, [])
+
+    useEffect(() => {
+        socketService.emit('game updated', game)
+    }, [game])
 
     const updateGame = (entity) => {
         setGame(prevGame => ({
@@ -47,6 +52,7 @@ export function Game() {
     }
 
     const startGame = () => {
+        console.log('testing');
         const shuffledDeck = cardDeck.sort((a, b) => 0.5 - Math.random())
         const { roomId } = params
         const tempPlayersDeck = shuffledDeck.splice(0, 8 * numberOfPlayers)
@@ -82,7 +88,7 @@ export function Game() {
         }
     })
 
-    const { isVictory, playingDeck, gameDirection, deckDraw, plus2Mode, changeColorMode } = game
+    const { isVictory, playingDeck, gameDirection, deckDraw, plus2Mode, changeColorMode, playersDecks } = game
 
     if (!isVictory) return (
         <div className="game-page-container">

@@ -10,13 +10,16 @@ const initialState = {
   plus2Mode: false,
   deckDraw: 0,
   changeColorMode: false,
-  isVictory: false
+  isVictory: false,
+  currRoomId: null
 }
 
 export function cardsReducer(state = initialState, action = {}) {
   switch (action.type) {
     case 'GET_CARD_DECK':
       return { ...state, cardDeck: action.cardDeck }
+    case 'GET_ROOM_ID':
+      return { ...state, currRoomId: action.roomId }
     case 'GET_SHUFFLED_DECK':
       return { ...state, shuffledDeck: action.shuffled }
     case 'GET_PLAYERS_DECKS':

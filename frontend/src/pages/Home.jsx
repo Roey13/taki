@@ -5,7 +5,7 @@ import { PlayersCards } from '../cmps/PlayersCards'
 import { eventBusService } from '../services/eventBusService.js';
 import { v4 as uuidv4 } from 'uuid';
 import { Link } from 'react-router-dom'
-import { setNumberOfPlayers } from '../store/actions/cardsActions.js'
+import { setNumberOfPlayers, getRoomId } from '../store/actions/cardsActions.js'
 
 
 export function Home() {
@@ -22,6 +22,7 @@ export function Home() {
 
     const createLink = () => {
         dispatch(setNumberOfPlayers(playersAmount))
+        dispatch(getRoomId(roomId))
         setIsReady(true)
     }
 

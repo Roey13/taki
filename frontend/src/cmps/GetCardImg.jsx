@@ -1,7 +1,5 @@
 export function GetCardImg({ card }) {
 
-    // console.log('card', card);
-
     let tempName = card.cardName;
     if (card.cardName === 'tempColor') {
         tempName = 'changeColor' + card.cardColor[0];

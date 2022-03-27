@@ -26,7 +26,7 @@ function connectSockets(http, session) {
                 gSocketBySessionIdMap[socket.handshake.sessionID] = null
             }
         })
-        socket.on('editor id', roomId => {
+        socket.on('join game', roomId => {
             if (socket.roomId === roomId) return;
             if (socket.roomId) {
                 socket.leave(socket.roomId)
@@ -35,25 +35,8 @@ function connectSockets(http, session) {
             socket.roomId = roomId
             console.log('roomId', roomId);
         })
-        socket.on('update wap', (wap) => {
-            socket.broadcast.to(socket.roomId).emit('update wap', wap)
-        })
-        socket.on('mouse move', pos => {
-            socket.broadcast.to(socket.roomId).emit('mouse_position_update', pos);
-        });
-        socket.on('change wap', wap => {
-            console.log('wap', wap);
-            // emits to all sockets:
-            // gIo.emit('chat addwap', wap)
-            // emits only to sockets in the same room
-            // gIo.to(socket.myTopic).emit('update wap', wap)
-        })
-
-        socket.on('store update', msg => {
-            gIo.broadcast.emit('notify users', msg)
-        })
-        socket.on('user-watch', userId => {
-            socket.join(userId)
+        socket.on('game updated', game => {
+            socket.to(socket.roomId).emit('updated game', game)
         })
 
     })

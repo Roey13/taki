@@ -9,6 +9,14 @@
 //   }
 // }
 
+export function getRoomId(roomId){
+  return async dispatch => {
+    try {
+      dispatch({ type: 'GET_ROOM_ID', roomId })
+    } catch (err) {}
+  }
+}
+
 export function getShuffledDeck(shuffled){
   return async dispatch => {
     try {
