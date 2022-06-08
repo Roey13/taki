@@ -11,8 +11,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { cardDeck } from '../services/cardDeckService.js'
 import { socketService } from '../services/socket.service.js';
 import { useParams } from 'react-router-dom'
+import { saveGame } from '../store/actions/cardsActions.js'
 
 export function Game() {
+
+    const dispatch = useDispatch()
 
     const params = useParams()
     const { numberOfPlayers, currRoomId } = useSelector(state => state.cardsModule)
@@ -49,6 +52,11 @@ export function Game() {
             ...prevGame,
             ...entity
         }))
+        saveTheGame()
+    }
+
+    const saveTheGame = () => {
+        dispatch(saveGame(game))
     }
 
     const startGame = () => {

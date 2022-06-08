@@ -28,9 +28,12 @@ export function Home() {
 
     return (
         <div className="home-container">
-            <button onClick={createLink}>Create Game</button>
-            <input type="number" value={playersAmount} min="2" max="4" onChange={updatePlayersAmount}></input>
-            {isReady && <Link to={`/room/${roomId}`}>Enter Game</Link>}
+            <div className="main-container">
+                <button onClick={createLink} className="create-game-btn">Create Game!</button>
+                <input type="number" value={playersAmount} min="2" max="4" onChange={updatePlayersAmount}></input>
+                <div className="players">Players</div>
+                <div className="enter-game-div">{isReady && <Link to={`/room/${roomId}`} className="enter-game-lnk">Enter Game</Link>}</div>
+            </div>
         </div>
     )
 }

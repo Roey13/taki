@@ -24,7 +24,7 @@ function doLog(level, ...args) {
     const strs = args.map(arg =>
         (typeof arg === 'string') ? arg :
             (isError(arg)) ? arg : JSON.stringify(arg))
-
+            
     var line = strs.join(' | ')
     const store = asyncLocalStorage.getStore()
     const sessionId = store?.sessionId
@@ -36,7 +36,6 @@ function doLog(level, ...args) {
 
 module.exports = {
     debug(...args) {
-        // if (process.env.NODE_NEV === 'production') return
         doLog('DEBUG', ...args)
     },
     info(...args) {

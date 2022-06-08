@@ -11,11 +11,24 @@ const initialState = {
   deckDraw: 0,
   changeColorMode: false,
   isVictory: false,
-  currRoomId: null
+  currRoomId: null,
+
+  currGame: null,
+  games: [],
+
 }
 
 export function cardsReducer(state = initialState, action = {}) {
   switch (action.type) {
+    case 'ADD_GAME':
+      return { ...state, games: [...state.games, action.game] }
+    case 'UPDATE_GAME':
+      return {
+        ...state,
+        games: state.games.map(game =>
+          game.roomId === action.game.roomId ? action.game : game
+        )
+      }
     case 'GET_CARD_DECK':
       return { ...state, cardDeck: action.cardDeck }
     case 'GET_ROOM_ID':
