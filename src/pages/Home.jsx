@@ -29,7 +29,7 @@ export function Home() {
     return (
         <div className="home-container">
             <div className="main-container">
-                <button onClick={createLink} className="create-game-btn">Create Game!</button>
+                <button onClick={createLink} className="create-game-btn">Create Game!!!</button>
                 <input type="number" value={playersAmount} min="2" max="4" onChange={updatePlayersAmount}></input>
                 <div className="players">Players</div>
                 <div className="enter-game-div">{isReady && <Link to={`/room/${roomId}`} className="enter-game-lnk">Start</Link>}</div>
