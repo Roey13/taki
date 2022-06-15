@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { getCardDeck, getShuffledDeck, getPlayersDecks, getPlayingDeck, setPlayersTurn, toggleColorMode, toggleOpenTaki } from '../store/actions/cardsActions.js'

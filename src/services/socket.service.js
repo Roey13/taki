@@ -46,7 +46,6 @@ function createSocketService() {
     return socketService
 }
 
-// eslint-disable-next-line
 function createDummySocketService() {
     var listenersMap = {}
     const socketService = {
